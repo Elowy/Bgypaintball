@@ -10,6 +10,8 @@ egyszerűen hostolható (pl. GitHub Pages, Netlify, bármilyen webszerver).
 ```
 .
 ├── index.html          # Egyoldalas (one-page) weboldal
+├── sitemap.xml         # Keresőknek (Google Search Console)
+├── robots.txt          # Indexelési szabályok + sitemap hivatkozás
 ├── css/
 │   └── style.css       # Teljes stílus, reszponzív, sötét téma
 ├── js/

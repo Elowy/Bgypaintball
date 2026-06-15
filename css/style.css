@@ -189,6 +189,13 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
 .gm-ground { stroke: rgba(255,255,255,.22); stroke-width: 2; }
 .gm-ticks line { stroke: rgba(255,255,255,.16); stroke-width: 3; stroke-linecap: round; }
 
+/* Fedezékek (háttér props) */
+.gm-props { opacity: .9; }
+.gm-bale rect { fill: #6e5f33; }
+.gm-bale line { stroke: rgba(0,0,0,.28); stroke-width: 2; }
+.gm-barrel rect { fill: #2f4a36; stroke: rgba(0,0,0,.3); stroke-width: 1.5; }
+.gm-barrel line { stroke: rgba(0,0,0,.32); stroke-width: 2; }
+
 /* Talaj görgetése (haladás illúziója) */
 .gm-ticks { animation: gmTicks .5s linear infinite; }
 @keyframes gmTicks { from { transform: translateX(0); } to { transform: translateX(-40px); } }

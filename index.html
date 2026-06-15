@@ -207,22 +207,22 @@
       </div>
       <div class="gallery" id="gallery">
         <figure class="gallery-item">
-          <img src="assets/img/slideshow01.png" alt="Paintball pálya Balassagyarmat, Nyírjes – szabadtéri terep szénabálákkal" loading="lazy" width="880" height="274" />
+          <img src="assets/img/galeria1.jpg" alt="Paintball pálya Balassagyarmat – terep szénabálákkal és roncsautóval" loading="lazy" width="582" height="116" />
         </figure>
         <figure class="gallery-item">
-          <img src="assets/img/slideshow02.png" alt="A pálya akadályai és fedezékei" loading="lazy" width="880" height="274" />
+          <img src="assets/img/galeria2.jpg" alt="Hordós fedezékek a fák között" loading="lazy" width="582" height="116" />
         </figure>
         <figure class="gallery-item">
-          <img src="assets/img/slideshow03.png" alt="Hordós fedezékek a paintball pályán" loading="lazy" width="880" height="274" />
+          <img src="assets/img/galeria3.jpg" alt="Fémhordó fedezékek és háló a pályán" loading="lazy" width="582" height="116" />
         </figure>
         <figure class="gallery-item">
-          <img src="assets/img/slideshow04.png" alt="Kilátás a paintball terepre" loading="lazy" width="880" height="274" />
+          <img src="assets/img/galeria4.jpg" alt="Szénabálák és gumiabroncs fedezékek" loading="lazy" width="582" height="116" />
         </figure>
         <figure class="gallery-item">
-          <img src="assets/img/slideshow05.png" alt="A pálya természetes környezetben, Nyírjesben" loading="lazy" width="880" height="274" />
+          <img src="assets/img/galeria5.jpg" alt="A pálya tágas, természetes terepe" loading="lazy" width="582" height="116" />
         </figure>
         <figure class="gallery-item">
-          <img src="assets/img/slideshow06.png" alt="Paintball harctér Balassagyarmat mellett" loading="lazy" width="880" height="274" />
+          <img src="assets/img/galeria6.jpg" alt="Régi épület és gumiabroncs fedezékek a pálya szélén" loading="lazy" width="582" height="116" />
         </figure>
       </div>
       <div class="fb-feed">
@@ -331,6 +331,15 @@
       </a>
     </div>
   </footer>
+
+  <!-- ===== Lightbox (képnagyítás) ===== -->
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Képnézegető">
+    <button class="lb-close" id="lbClose" type="button" aria-label="Bezárás">&times;</button>
+    <button class="lb-nav lb-prev" id="lbPrev" type="button" aria-label="Előző kép">&lsaquo;</button>
+    <img class="lb-img" id="lbImg" src="" alt="" />
+    <button class="lb-nav lb-next" id="lbNext" type="button" aria-label="Következő kép">&rsaquo;</button>
+    <div class="lb-counter" id="lbCounter"></div>
+  </div>
 
   <!-- Facebook SDK a feed (Page Plugin) megjelenítéséhez -->
   <script async defer crossorigin="anonymous" src="https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v19.0"></script>

@@ -54,6 +54,52 @@
   });
 })();
 
+/* ===== Lightbox (gallery image zoom) ===== */
+(function () {
+  const imgs = Array.prototype.slice.call(
+    document.querySelectorAll('#gallery .gallery-item img')
+  );
+  const lb = document.getElementById('lightbox');
+  if (!imgs.length || !lb) return;
+
+  const lbImg = document.getElementById('lbImg');
+  const counter = document.getElementById('lbCounter');
+  let idx = 0;
+
+  function show(i) {
+    idx = (i + imgs.length) % imgs.length;
+    const src = imgs[idx];
+    lbImg.src = src.currentSrc || src.src;
+    lbImg.alt = src.alt || '';
+    counter.textContent = (idx + 1) + ' / ' + imgs.length;
+  }
+  function open(i) {
+    show(i);
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+  }
+  function close() {
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+  }
+
+  imgs.forEach(function (im, i) {
+    im.addEventListener('click', function () { open(i); });
+  });
+  document.getElementById('lbClose').addEventListener('click', close);
+  document.getElementById('lbNext').addEventListener('click', function (e) { e.stopPropagation(); show(idx + 1); });
+  document.getElementById('lbPrev').addEventListener('click', function (e) { e.stopPropagation(); show(idx - 1); });
+  lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+  document.addEventListener('keydown', function (e) {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowRight') show(idx + 1);
+    else if (e.key === 'ArrowLeft') show(idx - 1);
+  });
+})();
+
 /* ===== Paintball splatter on scroll ===== */
 (function () {
   const paints = document.querySelectorAll('.paint');

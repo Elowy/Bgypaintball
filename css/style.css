@@ -169,6 +169,84 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
 .card h3 { font-size: 1.2rem; }
 .card p { color: var(--muted); font-size: .96rem; margin: 0; }
 
+/* ===== Játékmódok (animált jelenetek) ===== */
+.gm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.gm-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: transform .25s, border-color .25s; }
+.gm-card:hover { transform: translateY(-6px); border-color: rgba(255,90,31,.4); }
+.gm-stage { background: linear-gradient(180deg, #26402c 0%, #1a2a1e 60%, #15201a 100%); border-bottom: 1px solid var(--line); }
+.gm-scene { display: block; width: 100%; height: auto; }
+.gm-body { padding: 1.4rem 1.5rem 1.7rem; }
+.gm-num { font-family: var(--display); font-weight: 400; font-size: 1.5rem; color: var(--orange); letter-spacing: .06em; }
+.gm-body h3 { font-size: 1.3rem; margin: .1rem 0 .5rem; }
+.gm-body p { color: var(--muted); font-size: .96rem; margin: 0; }
+.gm-body p strong { color: var(--text); }
+.gm-doc { text-align: center; margin-top: 2.5rem; }
+
+/* Pálcikaemberek alap stílusa */
+.gm-limb, .gm-leg, .gm-leg2, .gm-arm, .gm-flagpole { stroke: #eef1f5; stroke-width: 4; stroke-linecap: round; fill: none; }
+.gm-head { fill: #eef1f5; }
+.gm-marker { stroke: #11151b; stroke-width: 6; stroke-linecap: round; fill: none; }
+.gm-ground { stroke: rgba(255,255,255,.22); stroke-width: 2; }
+.gm-ticks line { stroke: rgba(255,255,255,.16); stroke-width: 3; stroke-linecap: round; }
+
+/* Talaj görgetése (haladás illúziója) */
+.gm-ticks { animation: gmTicks .5s linear infinite; }
+@keyframes gmTicks { from { transform: translateX(0); } to { transform: translateX(-40px); } }
+
+/* Futás: testbillegés + lábmozgás */
+.gm-runner, .gm-chaser { animation: gmBob .5s ease-in-out infinite; }
+.gm-chaser { animation-delay: -.12s; }
+@keyframes gmBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+.gm-runner .gm-leg, .gm-chaser .gm-leg,
+.gm-runner .gm-arm-b, .gm-chaser .gm-arm-b { transform-box: view-box; animation: gmLeg .5s ease-in-out infinite; }
+.gm-runner .gm-leg { transform-origin: 250px 132px; }
+.gm-chaser .gm-leg { transform-origin: 120px 136px; }
+.gm-runner .gm-lb, .gm-chaser .gm-lb { animation-delay: -.25s; }
+.gm-runner .gm-arm-b { transform-origin: 250px 114px; }
+.gm-chaser .gm-arm-b { transform-origin: 120px 118px; }
+@keyframes gmLeg { 0%,100% { transform: rotate(22deg); } 50% { transform: rotate(-22deg); } }
+
+/* Zászló lobogása */
+.gm-flag { fill: var(--orange); transform-box: view-box; transform-origin: 266px 80px; animation: gmFlag .6s ease-in-out infinite; }
+.gm-flagpole { stroke: #d7dbe0; stroke-width: 3; }
+@keyframes gmFlag { 0%,100% { transform: scaleX(1) skewY(0); } 50% { transform: scaleX(.82) skewY(-7deg); } }
+
+/* Lövedékek (üldözés) */
+.gm-pb { opacity: 0; }
+.gm-pb1, .gm-pb3 { fill: var(--orange); }
+.gm-pb2 { fill: var(--green); }
+.gm-pb1 { animation: gmShoot 1.6s linear infinite; }
+.gm-pb2 { animation: gmShoot 1.6s linear infinite .55s; }
+.gm-pb3 { animation: gmShoot 1.6s linear infinite 1.1s; }
+@keyframes gmShoot { 0% { transform: translateX(0); opacity: 0; } 10% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(78px); opacity: 0; } }
+
+/* Tesók harca: billegés + kétirányú lövés */
+.gm-duo { animation: gmBob .8s ease-in-out infinite; }
+.gm-duoB { animation-delay: -.4s; }
+.gm-pbL { fill: var(--orange); animation: gmShootL 1.4s linear infinite; }
+.gm-pbR { fill: var(--green); animation: gmShootR 1.4s linear infinite .7s; }
+@keyframes gmShootL { 0% { transform: translateX(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateX(-150px); opacity: 0; } }
+@keyframes gmShootR { 0% { transform: translateX(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateX(150px); opacity: 0; } }
+
+/* Utolsó emberig: győztes ugrálás, fröccsenések */
+.gm-winner { animation: gmWin 1.2s ease-in-out infinite; }
+@keyframes gmWin { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+.gm-cheerL, .gm-cheerR { transform-box: view-box; transform-origin: 200px 115px; }
+.gm-cheerL { animation: gmCheerL 1.2s ease-in-out infinite; }
+.gm-cheerR { animation: gmCheerR 1.2s ease-in-out infinite; }
+@keyframes gmCheerL { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-14deg); } }
+@keyframes gmCheerR { 0%,100% { transform: rotate(0); } 50% { transform: rotate(14deg); } }
+.gm-burst { transform-box: view-box; }
+.gm-b1 { fill: var(--orange); transform-origin: 90px 120px; animation: gmBurst 1.8s ease-out infinite; }
+.gm-b2 { fill: var(--green); transform-origin: 320px 110px; animation: gmBurst 1.8s ease-out infinite .6s; }
+.gm-b3 { fill: #1fb6ff; transform-origin: 210px 60px; animation: gmBurst 1.8s ease-out infinite 1.2s; }
+@keyframes gmBurst { 0% { transform: scale(0); opacity: .9; } 60% { transform: scale(1.1); opacity: .5; } 100% { transform: scale(1.35); opacity: 0; } }
+
+@media (max-width: 900px) {
+  .gm-grid { grid-template-columns: 1fr; max-width: 520px; margin-left: auto; margin-right: auto; }
+}
+
 /* ===== Prices ===== */
 .price-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.8rem; max-width: 760px; margin: 3rem auto 0; }
 .price-card {

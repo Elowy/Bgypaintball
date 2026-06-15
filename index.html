@@ -218,9 +218,26 @@
           <img src="assets/img/slideshow06.png" alt="Paintball harctér Balassagyarmat mellett" loading="lazy" width="880" height="274" />
         </figure>
       </div>
-      <p class="gallery-cta">
-        <a href="https://www.facebook.com/bgyarmatpaintball.hu" target="_blank" rel="noopener" class="btn btn-ghost">További képek a Facebookon</a>
-      </p>
+      <div class="fb-feed">
+        <h3 class="fb-feed-title">Friss híreink a Facebookon</h3>
+        <div id="fb-root"></div>
+        <div class="fb-page"
+          data-href="https://www.facebook.com/bgyarmatpaintball.hu"
+          data-tabs="timeline"
+          data-width="500"
+          data-height="700"
+          data-small-header="false"
+          data-adapt-container-width="true"
+          data-hide-cover="false"
+          data-show-facepile="true">
+          <blockquote cite="https://www.facebook.com/bgyarmatpaintball.hu" class="fb-xfbml-parse-ignore">
+            <a href="https://www.facebook.com/bgyarmatpaintball.hu">BGYarmat Paintball a Facebookon</a>
+          </blockquote>
+        </div>
+        <p class="fb-fallback">
+          <a href="https://www.facebook.com/bgyarmatpaintball.hu" target="_blank" rel="noopener">Nem töltődik be a feed? Nyisd meg a Facebook-oldalunkat →</a>
+        </p>
+      </div>
     </div>
   </section>
 
@@ -263,7 +280,7 @@
           </li>
           <li>
             <span class="ci">📍</span>
-            <div><span class="cl">Cím</span><span>2660 Balassagyarmat, Nyírjes</span></div>
+            <div><span class="cl">Cím</span><span>2660 Balassagyarmat, Fenyves út</span></div>
           </li>
           <li>
             <span class="ci">📘</span>
@@ -301,6 +318,8 @@
     </div>
   </footer>
 
+  <!-- Facebook SDK a feed (Page Plugin) megjelenítéséhez -->
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v19.0"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

@@ -18,8 +18,7 @@ egyszerűen hostolható (pl. GitHub Pages, Netlify, bármilyen webszerver).
 │   └── img/
 │       ├── logo.png    # Logó (átlátszó háttérrel)
 │       ├── favicon-64.png, apple-touch-icon.png
-│       ├── galeria1–6.jpg # Galéria fotók (régi logó nélkül)
-│       └── slideshow01–06.png # Eredeti bannerek (forrás)
+│       └── galeria1–5.jpg # Valódi pálya- és akciófotók (hero + galéria)
 └── upload/             # Letölthető dokumentumok (szabalyzat.pdf, jatekmodok.pdf)
 ```
 
@@ -35,9 +34,9 @@ egyszerűen hostolható (pl. GitHub Pages, Netlify, bármilyen webszerver).
 
 ## Testreszabás
 
-- **Saját képek a galériába:** cseréld le az `assets/img/slideshow01–06.png`
+- **Saját képek a galériába:** cseréld le az `assets/img/galeria1–5.jpg`
   fájlokat, vagy módosítsd a galéria `<img src="…">` hivatkozásait az
-  `index.html`-ben (a szélesvásznú, ~880×274 arányú képek vágás nélkül jelennek meg).
+  `index.html`-ben. Ugyanezek a fotók adják a hero diavetítés hátterét is.
 - **Dokumentumok:** tedd a `upload/` mappába a `szabalyzat.pdf` és
   `jatekmodok.pdf` fájlokat (a bemutatkozás szekció ezekre hivatkozik).
 - **Színek / betűtípus:** a `css/style.css` tetején lévő `:root` változókban

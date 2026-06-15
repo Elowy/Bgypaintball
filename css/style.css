@@ -405,6 +405,54 @@ body.no-scroll { overflow: hidden; }
 .back-to-top:active { transform: translateY(0) scale(.95); }
 @media (max-width: 560px) { .back-to-top { width: 46px; height: 46px; } }
 
+/* Lebegő hívás gomb + üldöző pálcikaember */
+.call-widget {
+  position: fixed; left: clamp(1rem, 2.5vw, 1.6rem); bottom: clamp(1rem, 2.5vw, 1.6rem);
+  z-index: 90; width: 172px; height: 70px; pointer-events: none;
+}
+.cw-runner { position: absolute; left: 0; bottom: 2px; animation: cwBob .45s ease-in-out infinite; }
+.cw-runner svg { display: block; overflow: visible; }
+.cw-limb, .cw-leg, .cw-arm { stroke: #eef1f5; stroke-width: 4; stroke-linecap: round; fill: none; }
+.cw-head { fill: #eef1f5; }
+.cw-marker { stroke: #11151b; stroke-width: 5; stroke-linecap: round; fill: none; }
+.cw-runner svg .cw-head, .cw-runner svg .cw-limb, .cw-runner svg .cw-leg, .cw-runner svg .cw-arm, .cw-runner svg .cw-marker {
+  paint-order: stroke; filter: drop-shadow(0 1px 1px rgba(0,0,0,.5));
+}
+.cw-leg, .cw-arm { transform-box: view-box; }
+.cw-lf, .cw-lb { transform-origin: 22px 50px; animation: cwLeg .45s ease-in-out infinite; }
+.cw-lb { animation-delay: -.22s; }
+.cw-arm { transform-origin: 22px 34px; animation: cwArm .45s ease-in-out infinite; }
+@keyframes cwBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes cwLeg { 0%,100% { transform: rotate(20deg); } 50% { transform: rotate(-20deg); } }
+@keyframes cwArm { 0%,100% { transform: rotate(-16deg); } 50% { transform: rotate(16deg); } }
+
+/* Lövedék */
+.cw-pb {
+  position: absolute; left: 52px; bottom: 30px; width: 10px; height: 10px;
+  border-radius: 50%; background: #39ff7a; opacity: 0;
+  animation: cwShoot 1.4s linear infinite;
+}
+@keyframes cwShoot {
+  0% { transform: translateX(0) scale(.7); opacity: 0; }
+  12% { opacity: 1; }
+  80% { opacity: 1; transform: translateX(60px) scale(1); }
+  100% { transform: translateX(70px) scale(1.6); opacity: 0; }
+}
+
+/* Hívás gomb */
+.call-btn {
+  position: absolute; right: 0; bottom: 6px; width: 56px; height: 56px; border-radius: 50%;
+  display: grid; place-items: center; pointer-events: auto; cursor: pointer;
+  color: #11151b; background: #ff5a1f; text-decoration: none;
+  box-shadow: 0 8px 22px rgba(0,0,0,.4);
+  transition: background .15s ease, transform .15s ease, box-shadow .2s ease;
+}
+.call-btn:hover { transform: scale(1.08); box-shadow: 0 10px 26px rgba(0,0,0,.5); }
+.call-btn.hit { animation: cwHit .3s ease; }
+@keyframes cwHit { 0% { transform: scale(1); } 40% { transform: scale(1.22); } 100% { transform: scale(1); } }
+@media (max-width: 560px) { .call-widget { width: 160px; height: 64px; } .call-btn { width: 50px; height: 50px; } }
+@media (prefers-reduced-motion: reduce) { .cw-runner, .cw-pb { display: none; } }
+
 /* ===== Developer credit ===== */
 .credit-wrap { margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--line); text-align: center; }
 .credit {

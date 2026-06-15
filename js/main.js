@@ -73,6 +73,29 @@
   });
 })();
 
+/* ===== Call button: stick figure shoots it, color changes on hit ===== */
+(function () {
+  const widget = document.querySelector('.call-widget');
+  if (!widget) return;
+  const btn = widget.querySelector('.call-btn');
+  const pb = widget.querySelector('.cw-pb');
+  if (!btn || !pb) return;
+
+  const colors = ['#ff5a1f', '#39ff7a', '#1fb6ff', '#b14bff', '#ffd400'];
+  let i = 0;
+  btn.style.background = colors[0];
+  pb.style.background = colors[1];
+
+  // Minden lövedék-kör végén = találat -> új szín
+  pb.addEventListener('animationiteration', function () {
+    i = (i + 1) % colors.length;
+    btn.style.background = colors[i];
+    pb.style.background = colors[(i + 1) % colors.length];
+    btn.classList.add('hit');
+    setTimeout(function () { btn.classList.remove('hit'); }, 300);
+  });
+})();
+
 /* ===== Lightbox (gallery image zoom) ===== */
 (function () {
   const imgs = Array.prototype.slice.call(

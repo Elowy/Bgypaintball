@@ -26,15 +26,15 @@ egyszerűen hostolható (pl. GitHub Pages, Netlify, bármilyen webszerver).
 - **Bemutatkozás** – leírás, szolgáltatások listája, dokumentum linkek
 - **Szolgáltatások / Rendezvények** – születésnap, leány-/legénybúcsú, céges, csapatépítő
 - **Áraink** – csomagok (100 / 200 golyó), helyfoglalási díj
-- **Galéria** – placeholder képhelyek (lásd lent)
+- **Galéria** – valódi pályaképek (`assets/img/slideshow01–06.png`)
 - **Partnerek** – Kürtigold Asztalosipari Kft., Kürti Viktória Műkörmös
 - **Kapcsolat** – telefon, e-mail, cím, Facebook, beágyazott térkép
 
 ## Testreszabás
 
-- **Saját képek a galériába:** a `index.html` `.gallery-item` elemeihez adj
-  `style="background-image:url('assets/img/sajat-kep.jpg')"` attribútumot,
-  vagy cseréld le a `css/style.css` `.ph-1` … `.ph-6` osztályok hátterét.
+- **Saját képek a galériába:** cseréld le az `assets/img/slideshow01–06.png`
+  fájlokat, vagy módosítsd a galéria `<img src="…">` hivatkozásait az
+  `index.html`-ben (a szélesvásznú, ~880×274 arányú képek vágás nélkül jelennek meg).
 - **Dokumentumok:** tedd a `upload/` mappába a `szabalyzat.pdf` és
   `jatekmodok.pdf` fájlokat (a bemutatkozás szekció ezekre hivatkozik).
 - **Színek / betűtípus:** a `css/style.css` tetején lévő `:root` változókban

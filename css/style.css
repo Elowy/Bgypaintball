@@ -60,7 +60,8 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
 }
 .nav-wrap { display: flex; align-items: center; justify-content: space-between; height: 70px; }
 .brand { display: flex; align-items: center; gap: .6rem; font-weight: 800; }
-.brand-mark { display: inline-flex; }
+.brand-logo { display: block; width: 46px; height: 46px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,.4)); }
+.site-footer .brand-logo { width: 40px; height: 40px; }
 .brand-text { font-size: 1.15rem; letter-spacing: .02em; }
 .brand-text strong { color: var(--orange); }
 .main-nav { display: flex; align-items: center; gap: .35rem; }

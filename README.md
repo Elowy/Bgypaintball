@@ -16,7 +16,10 @@ egyszerűen hostolható (pl. GitHub Pages, Netlify, bármilyen webszerver).
 │   └── main.js         # Mobil menü, scroll-reveal animáció, lábléc év
 ├── assets/
 │   └── img/
-│       └── favicon.svg # Oldal ikon
+│       ├── logo.png    # Logó (átlátszó háttérrel)
+│       ├── favicon-64.png, apple-touch-icon.png
+│       ├── galeria1–6.jpg # Galéria fotók (régi logó nélkül)
+│       └── slideshow01–06.png # Eredeti bannerek (forrás)
 └── upload/             # Letölthető dokumentumok (szabalyzat.pdf, jatekmodok.pdf)
 ```
 

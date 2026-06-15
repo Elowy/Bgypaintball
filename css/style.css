@@ -16,6 +16,8 @@
   --maxw:      1140px;
   --font:      'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   --display:   'Bebas Neue', var(--font);
+  /* Paintball fröccsenés alak (SVG maszk) */
+  --splat: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><path d='M100 28c19 0 27 15 41 19s31-3 37 12-9 25-7 39 17 22 9 35-27 4-39 14-15 29-31 29-21-17-35-23-33 3-41-12 7-27 3-41-19-22-11-37 27-6 37-18 17-27 31-27z'/><circle cx='38' cy='42' r='7'/><circle cx='170' cy='58' r='5'/><circle cx='178' cy='150' r='9'/><circle cx='28' cy='150' r='6'/><circle cx='150' cy='182' r='4'/><circle cx='62' cy='186' r='5'/><circle cx='18' cy='96' r='4'/></svg>");
 }
 
 /* ===== Reset ===== */
@@ -28,6 +30,7 @@ body {
   color: var(--text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
@@ -122,7 +125,8 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
 @keyframes bob { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,8px); } }
 
 /* ===== Sections ===== */
-.section { padding: clamp(3.5rem, 9vw, 6.5rem) 0; }
+.section { position: relative; overflow: hidden; padding: clamp(3.5rem, 9vw, 6.5rem) 0; }
+.section > .container { position: relative; z-index: 1; }
 .section-alt { background: var(--bg-alt); }
 .section-head { max-width: 640px; }
 .section-head.center { margin-inline: auto; text-align: center; }
@@ -224,6 +228,11 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
 .partner:hover { border-color: var(--orange); transform: translateY(-4px); }
 .partner-name { font-weight: 700; }
 .partner-url { color: var(--orange); font-size: .9rem; }
+/* Fejlesztői partner (luiz-tech.hu) – a footer kreditjével egyező stílus */
+.partner-dev { gap: .35rem; }
+.partner-dev:hover { border-color: rgba(57,255,122,.5); }
+.partner-dev-spark { color: var(--green); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 700; font-size: 1.15rem; }
+.partner-dev .partner-name { font-size: 1.1rem; font-weight: 800; }
 
 /* ===== Contact ===== */
 .section-contact { background: var(--bg-alt); }
@@ -272,6 +281,36 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
   .credit-name { animation: none; background-position: 0 50%; }
 }
 
+/* ===== Paintball fröccsenések (scroll-trigger) ===== */
+.paint {
+  position: absolute; z-index: 0; pointer-events: none;
+  left: var(--x, 50%); top: var(--y, 20%);
+  width: calc(var(--s, 1) * 150px); aspect-ratio: 1;
+  opacity: 0; transform: rotate(var(--r, 0deg)) scale(.2);
+  transition: transform .55s cubic-bezier(.18,1.5,.4,1), opacity .35s ease;
+  will-change: transform, opacity;
+}
+.paint.in { opacity: var(--o, .16); transform: rotate(var(--r, 0deg)) scale(1); }
+.paint::before {
+  content: ""; position: absolute; inset: 0; background: var(--c, var(--orange));
+  -webkit-mask: var(--splat) center / contain no-repeat;
+  mask: var(--splat) center / contain no-repeat;
+}
+/* Lecsorgó festék a becsapódás helyéről */
+.paint .drip {
+  position: absolute; left: 50%; top: 58%; transform: translateX(-50%);
+  width: calc(var(--s, 1) * 9px); height: 0; background: var(--c, var(--orange));
+  border-radius: 0 0 999px 999px;
+  transition: height 1.2s cubic-bezier(.5,0,.5,1) .3s;
+}
+.paint.in .drip { height: calc(var(--s, 1) * 120px); }
+.paint .drip::after {
+  content: ""; position: absolute; left: 50%; bottom: calc(var(--s, 1) * -5px);
+  transform: translateX(-50%);
+  width: calc(var(--s, 1) * 13px); height: calc(var(--s, 1) * 13px);
+  border-radius: 50%; background: var(--c, var(--orange));
+}
+
 /* ===== Reveal animation ===== */
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
 .reveal.in { opacity: 1; transform: none; }
@@ -318,4 +357,6 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
+  .paint { transition: none; opacity: var(--o, .16); transform: rotate(var(--r, 0deg)) scale(1); }
+  .paint .drip { transition: none; height: calc(var(--s, 1) * 120px); }
 }

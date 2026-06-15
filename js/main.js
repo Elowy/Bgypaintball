@@ -54,6 +54,25 @@
   });
 })();
 
+/* ===== Paintball splatter on scroll ===== */
+(function () {
+  const paints = document.querySelectorAll('.paint');
+  if (!paints.length) return;
+  if (!('IntersectionObserver' in window)) {
+    paints.forEach(function (p) { p.classList.add('in'); });
+    return;
+  }
+  const io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.25 });
+  paints.forEach(function (p) { io.observe(p); });
+})();
+
 /* ===== Scroll reveal ===== */
 (function () {
   const targets = document.querySelectorAll(

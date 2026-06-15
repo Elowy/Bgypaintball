@@ -73,6 +73,18 @@
   });
 })();
 
+/* ===== Info toggles (pl. Tippmann 98 magyarázat) ===== */
+(function () {
+  document.querySelectorAll('.info-btn').forEach(function (btn) {
+    const li = btn.closest('.info-li');
+    if (!li) return;
+    btn.addEventListener('click', function () {
+      const open = li.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  });
+})();
+
 /* ===== Call button: stick figure shoots it, color changes on hit ===== */
 (function () {
   const widget = document.querySelector('.call-widget');

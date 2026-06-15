@@ -24,6 +24,36 @@
   if (y) y.textContent = new Date().getFullYear();
 })();
 
+/* ===== Hero background slideshow ===== */
+(function () {
+  const slides = Array.prototype.slice.call(
+    document.querySelectorAll('#heroSlideshow .hero-slide')
+  );
+  if (slides.length < 2) return;
+
+  let i = 0;
+  const INTERVAL = 5000; // ms between slides
+
+  function next() {
+    slides[i].classList.remove('is-active');
+    i = (i + 1) % slides.length;
+    // restart the Ken Burns zoom by reflowing the element
+    const el = slides[i];
+    el.style.animation = 'none';
+    void el.offsetWidth; // force reflow
+    el.style.animation = '';
+    el.classList.add('is-active');
+  }
+
+  let timer = setInterval(next, INTERVAL);
+
+  // Pause rotation when the tab is hidden to save resources
+  document.addEventListener('visibilitychange', function () {
+    clearInterval(timer);
+    if (!document.hidden) timer = setInterval(next, INTERVAL);
+  });
+})();
+
 /* ===== Scroll reveal ===== */
 (function () {
   const targets = document.querySelectorAll(

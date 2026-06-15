@@ -390,8 +390,20 @@ body.no-scroll { overflow: hidden; }
 .site-footer { background: var(--bg); border-top: 1px solid var(--line); padding: 2.5rem 0; }
 .footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
 .footer-meta { color: var(--muted); font-size: .9rem; margin: 0; }
-.to-top { color: var(--muted); font-weight: 600; font-size: .9rem; transition: .2s; }
-.to-top:hover { color: var(--orange); }
+/* Lebegő "vissza a tetejére" gomb */
+.back-to-top {
+  position: fixed; right: clamp(1rem, 2.5vw, 1.6rem); bottom: clamp(1rem, 2.5vw, 1.6rem);
+  z-index: 90; width: 50px; height: 50px; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  color: #fff; background: var(--orange); border: none;
+  box-shadow: 0 10px 26px rgba(255,90,31,.4);
+  opacity: 0; visibility: hidden; transform: translateY(16px) scale(.85);
+  transition: opacity .3s ease, transform .3s ease, background .2s ease, visibility .3s;
+}
+.back-to-top.show { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+.back-to-top:hover { background: var(--orange-d); transform: translateY(-3px) scale(1.05); }
+.back-to-top:active { transform: translateY(0) scale(.95); }
+@media (max-width: 560px) { .back-to-top { width: 46px; height: 46px; } }
 
 /* ===== Developer credit ===== */
 .credit-wrap { margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--line); text-align: center; }

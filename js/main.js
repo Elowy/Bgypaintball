@@ -54,6 +54,25 @@
   });
 })();
 
+/* ===== Back to top floating button ===== */
+(function () {
+  const btn = document.getElementById('backToTop');
+  if (!btn) return;
+  const SHOW_AT = 300; // px görgetés után jelenik meg
+
+  function onScroll() {
+    if (window.pageYOffset > SHOW_AT) btn.classList.add('show');
+    else btn.classList.remove('show');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  btn.addEventListener('click', function () {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  });
+})();
+
 /* ===== Lightbox (gallery image zoom) ===== */
 (function () {
   const imgs = Array.prototype.slice.call(

@@ -1,4 +1,4 @@
-# BGYarmat Paintball – statikus weboldal
+# Bgyarmatpaintball – statikus weboldal
 
 A [bgyarmatpaintball.hu](https://bgyarmatpaintball.hu/) modern, statikus alapokon
 újradolgozott változata. Külső keretrendszer és build lépés nélkül, tiszta

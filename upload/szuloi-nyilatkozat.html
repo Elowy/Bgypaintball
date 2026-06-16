@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Szülői hozzájáruló nyilatkozat – Bgyarmatpaintball</title>
+  <style>
+    :root { --ink:#15181c; --muted:#555; --line:#222; --accent:#e2440f; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif; color: var(--ink);
+      background: #f2f2f2; line-height: 1.5; font-size: 12px;
+    }
+    .page {
+      width: 210mm; min-height: 297mm; margin: 12px auto; padding: 16mm 16mm 14mm;
+      background: #fff; box-shadow: 0 6px 24px rgba(0,0,0,.18);
+    }
+    header { display: flex; align-items: center; gap: 14px; border-bottom: 2px solid var(--accent); padding-bottom: 12px; }
+    header img { width: 64px; height: 64px; object-fit: contain; }
+    header .h-title { flex: 1; }
+    header h1 { font-size: 17px; margin: 0 0 2px; letter-spacing: .3px; }
+    header .sub { font-size: 11px; color: var(--muted); }
+    header .biz { text-align: right; font-size: 10.5px; color: var(--muted); line-height: 1.45; }
+
+    h2 { font-size: 13px; margin: 12px 0 6px; padding-bottom: 3px; border-bottom: 1px solid #ddd; color: var(--accent); }
+    p { margin: 6px 0; }
+    .lead { font-size: 11.5px; color: #333; }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 22px; margin-top: 6px; }
+    .field { display: flex; align-items: flex-end; gap: 6px; }
+    .field .lbl { white-space: nowrap; font-size: 11px; color: #333; }
+    .field .ln { flex: 1; border-bottom: 1px solid #999; min-height: 16px; }
+    .full { grid-column: 1 / -1; }
+
+    ol.decl { margin: 6px 0 0; padding-left: 18px; }
+    ol.decl li { margin: 4px 0; font-size: 11px; }
+
+    .consent { margin-top: 10px; font-size: 11px; }
+    .consent .opt { display: inline-flex; align-items: center; gap: 6px; margin-right: 22px; }
+    .box { display: inline-block; width: 13px; height: 13px; border: 1.4px solid #333; vertical-align: -2px; }
+
+    .sign { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 22px; }
+    .sign .slot { text-align: center; }
+    .sign .sig-line { border-top: 1px solid #333; padding-top: 4px; font-size: 10.5px; color: #444; }
+    .place { display: flex; gap: 26px; margin-top: 14px; font-size: 11px; }
+    .place .ln { border-bottom: 1px solid #999; min-width: 120px; display: inline-block; }
+
+    footer { margin-top: 10px; border-top: 1px solid #ddd; padding-top: 6px; font-size: 9.5px; color: #777; text-align: center; }
+
+    .note { background: #fff7f3; border: 1px solid #f3c9b6; border-radius: 6px; padding: 8px 10px; font-size: 10.5px; color: #7a3b1d; margin-top: 10px; }
+
+    @media print {
+      body { background: #fff; }
+      .page { margin: 0; box-shadow: none; width: auto; min-height: auto; padding: 10mm 14mm 8mm; }
+      .noprint { display: none !important; }
+    }
+    .toolbar { width: 210mm; margin: 12px auto 0; text-align: right; }
+    .toolbar button { font: inherit; font-size: 12px; padding: 8px 16px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="toolbar noprint">
+    <button onclick="window.print()">🖨️ Nyomtatás / PDF mentés</button>
+  </div>
+
+  <div class="page">
+    <header>
+      <img src="../assets/img/logo.png" alt="Bgyarmatpaintball logó" />
+      <div class="h-title">
+        <h1>Szülői / törvényes képviselői hozzájáruló nyilatkozat</h1>
+        <div class="sub">16. életévét be nem töltött játékos paintball pályahasználatához</div>
+      </div>
+      <div class="biz">
+        <strong>Bgyarmatpaintball</strong><br />
+        2660 Balassagyarmat, Fenyves út<br />
+        Tel.: 06 30 / 720 84 99<br />
+        bgyarmatpaintball@gmail.com
+      </div>
+    </header>
+
+    <p class="lead">
+      Alulírott szülő / törvényes képviselő az alábbi nyilatkozatot teszem a kiskorú gyermekem
+      paintball játékban való részvételével kapcsolatban. A nyilatkozatot a pályahasználat
+      <strong>megkezdése előtt</strong>, a helyszínen kell aláírni.
+    </p>
+
+    <h2>1. A kiskorú játékos adatai</h2>
+    <div class="grid">
+      <div class="field full"><span class="lbl">Név:</span><span class="ln"></span></div>
+      <div class="field"><span class="lbl">Születési hely, idő:</span><span class="ln"></span></div>
+      <div class="field"><span class="lbl">Életkor:</span><span class="ln"></span></div>
+      <div class="field full"><span class="lbl">Lakcím:</span><span class="ln"></span></div>
+    </div>
+
+    <h2>2. A szülő / törvényes képviselő adatai</h2>
+    <div class="grid">
+      <div class="field"><span class="lbl">Név:</span><span class="ln"></span></div>
+      <div class="field"><span class="lbl">Minőség (anya / apa / gyám):</span><span class="ln"></span></div>
+      <div class="field full"><span class="lbl">Lakcím:</span><span class="ln"></span></div>
+      <div class="field"><span class="lbl">Telefonszám:</span><span class="ln"></span></div>
+      <div class="field"><span class="lbl">E-mail:</span><span class="ln"></span></div>
+      <div class="field"><span class="lbl">Szem. ig. / okmányszám:</span><span class="ln"></span></div>
+    </div>
+
+    <h2>3. Nyilatkozat</h2>
+    <ol class="decl">
+      <li><strong>Hozzájárulok</strong>, hogy a fent megnevezett kiskorú gyermekem a Bgyarmatpaintball pályáján
+        paintball játékban részt vegyen.</li>
+      <li>Tudomásul veszem, hogy a paintball <strong>fokozott fizikai igénybevétellel és kockázattal járó</strong>
+        szabadidős tevékenység, amely sérülés (pl. zúzódás, horzsolás, esés) veszélyével járhat.</li>
+      <li>Kijelentem, hogy gyermekem egészségi állapota a játékban való részvételt lehetővé teszi,
+        és nincs tudomásom olyan betegségéről vagy állapotáról (pl. szív- és érrendszeri, légzőszervi
+        megbetegedés, epilepszia, közelmúltbeli műtét, várandósság stb.), amely a részvételt kizárná.</li>
+      <li>A pálya <strong>szabályzatát és a játékmódok</strong> ismertetését megismertem, elfogadom,
+        és azt gyermekemmel is ismertettem.</li>
+      <li>Vállalom, hogy gyermekem betartja a pálya szabályait, a biztonsági előírásokat és a személyzet
+        utasításait. A <strong>védőfelszerelés (különösen a védőmaszk) viselése kötelező</strong>; tudomásul
+        veszem, hogy a maszk levétele a játéktéren szigorúan tilos és balesetveszélyes.</li>
+      <li>Tudomásul veszem, hogy az üzemeltető a szabályok betartása mellett a saját érdekkörén kívül,
+        illetve a játékos vagy más résztvevő <strong>szabályszegése miatt</strong> bekövetkező sérülésekért,
+        károkért nem vállal felelősséget. Az ebből eredő esetleges károkért a szülő / törvényes képviselő helytáll.</li>
+      <li>A 16. életévét be nem töltött játékos a pályát kizárólag e nyilatkozat aláírásával, és – ahol a
+        szabályzat előírja – nagykorú kíséretében használhatja.</li>
+    </ol>
+
+    <h2>4. Hozzájárulás kép- és hangfelvételhez (nem kötelező)</h2>
+    <p class="consent">
+      Hozzájárulok, hogy a játék során gyermekemről készült kép-/videófelvételeket az üzemeltető a
+      közösségi média oldalain és weboldalán bemutatás céljából felhasználja:
+      <br />
+      <span class="opt"><span class="box"></span> Igen, hozzájárulok</span>
+      <span class="opt"><span class="box"></span> Nem járulok hozzá</span>
+    </p>
+
+    <p class="consent" style="color:#444;">
+      Az itt megadott személyes adatokat az üzemeltető kizárólag a pályahasználathoz kapcsolódó célból,
+      a vonatkozó adatvédelmi jogszabályok (GDPR) szerint kezeli, és harmadik félnek nem adja át.
+    </p>
+
+    <div class="place">
+      <div>Kelt: <span class="ln"></span></div>
+      <div>(helység) <span class="ln"></span>, <span class="ln" style="min-width:90px;"></span> (dátum)</div>
+    </div>
+
+    <div class="sign">
+      <div class="slot"><div class="sig-line">szülő / törvényes képviselő aláírása</div></div>
+      <div class="slot"><div class="sig-line">játékos aláírása (ha tud írni)</div></div>
+    </div>
+
+    <div class="note noprint">
+      💡 Tipp: ez egy általános minta. Élesítés előtt érdemes jogásszal/ügyvéddel áttekintetni,
+      hogy a megfogalmazás a konkrét üzemeltetői feltételeknek és a hatályos jogszabályoknak megfeleljen.
+    </div>
+
+    <footer>
+      Bgyarmatpaintball • 2660 Balassagyarmat, Fenyves út • 06 30 / 720 84 99 • bgyarmatpaintball@gmail.com
+    </footer>
+  </div>
+</body>
+</html>

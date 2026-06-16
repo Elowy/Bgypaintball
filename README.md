@@ -44,6 +44,32 @@ egyszerűen hostolható (pl. GitHub Pages, Netlify, bármilyen webszerver).
 - **Színek / betűtípus:** a `css/style.css` tetején lévő `:root` változókban
   állítható (pl. `--orange`, `--green`).
 
+## Rejtett admin szerkesztő
+
+Az oldal tartalma (szövegek, árak, elérhetőségek) bejelentkezés után
+közvetlenül a böngészőből szerkeszthető — **backend nélkül**.
+
+- **Belépés:** írd a cím végére a `#admin`-t (pl. `bgyarmatpaintball.hu/#admin`).
+- **Jelszó:** alapértelmezetten `bgyarmat-admin` — **élesítés előtt cseréld le!**
+  A jelszó SHA-256 hashe a `js/admin.js` `PASS_HASH` konstansában van; a fájl
+  tetején lévő megjegyzés leírja, hogyan generálj újat.
+- **Szerkesztés:** a kijelölt (`data-edit`) mezők szerkeszthetővé válnak.
+  A *Mentés* a böngészőbe (localStorage) ment.
+
+### Hogy lássa MINDENKI a változást?
+
+A localStorage csak a saját böngésződben őrzi a módosítást. Élesítéshez:
+
+1. A szerkesztőben kattints az **Exportálás (JSON)** gombra → letölt egy
+   `content.json` fájlt.
+2. Tedd ezt a fájlt az oldal gyökerébe (a tárhelyre / a repo gyökerébe).
+3. Az oldal betöltéskor beolvassa a `content.json`-t, így a módosítások
+   **minden látogatónál** megjelennek.
+
+> ⚠️ Mivel ez statikus oldal, a jelszavas védelem csak a szerkesztő UI-t
+> rejti — nem erős biztonság. Valódi tartalom módosításához a `content.json`
+> tárhelyre töltése (commit) szükséges, ahhoz pedig hozzáférés kell.
+
 ## Helyi futtatás
 
 Nincs build lépés. Elég megnyitni az `index.html`-t böngészőben, vagy egy

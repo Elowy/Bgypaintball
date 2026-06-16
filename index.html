@@ -464,37 +464,45 @@
         <h2>Csomagok</h2>
         <p>Minden csomag tartalmazza a teljes felszerelést és a 4 órás pályahasználatot.</p>
       </div>
-      <div class="price-grid">
-        <article class="price-card">
-          <h3 class="price-name" data-edit="price.p1.name">Alap csomag</h3>
-          <p class="price-sub" data-edit="price.p1.sub">100 db golyóval</p>
-          <p class="price-value" data-edit="price.p1.value">6&nbsp;000 <span>Ft / fő</span></p>
-          <ul class="price-feat" data-edit="price.p1.feat">
-            <li>4 órás pályahasználat</li>
-            <li>Tippmann 98 marker</li>
-            <li>Overál &amp; védőmaszk</li>
-            <li>Lányoknak védőmellény</li>
-            <li>100 db golyó</li>
-          </ul>
-          <p class="price-extra" data-edit="price.p1.extra">További golyó: <strong>17 Ft / db</strong></p>
-          <a href="#kapcsolat" class="btn btn-primary btn-block">Foglalok</a>
-        </article>
-
-        <article class="price-card featured">
-          <span class="badge" data-edit="price.p2.badge">Népszerű</span>
-          <h3 class="price-name" data-edit="price.p2.name">Alap csomag</h3>
-          <p class="price-sub" data-edit="price.p2.sub">200 db golyóval</p>
-          <p class="price-value" data-edit="price.p2.value">8&nbsp;000 <span>Ft / fő</span></p>
-          <ul class="price-feat" data-edit="price.p2.feat">
-            <li>4 órás pályahasználat</li>
-            <li>Tippmann 98 marker</li>
-            <li>Overál &amp; védőmaszk</li>
-            <li>Lányoknak védőmellény</li>
-            <li>200 db golyó</li>
-          </ul>
-          <p class="price-extra" data-edit="price.p2.extra">További golyó: <strong>15 Ft / db</strong></p>
-          <a href="#kapcsolat" class="btn btn-primary btn-block">Foglalok</a>
-        </article>
+      <div class="price-carousel" id="priceCarousel">
+        <div class="price-viewport">
+          <div class="price-track" id="priceTrack">
+            <!-- A csomagokat a JS rendereli (admin.js). Ez itt no-JS tartalék. -->
+            <article class="price-card">
+              <h3 class="price-name">Alap csomag</h3>
+              <p class="price-sub">100 db golyóval</p>
+              <p class="price-value">6&nbsp;000 <span>Ft / fő</span></p>
+              <ul class="price-feat">
+                <li>4 órás pályahasználat</li>
+                <li>Tippmann 98 marker</li>
+                <li>Overál &amp; védőmaszk</li>
+                <li>Lányoknak védőmellény</li>
+                <li>100 db golyó</li>
+              </ul>
+              <p class="price-extra">További golyó: <strong>17 Ft / db</strong></p>
+              <a href="#kapcsolat" class="btn btn-primary btn-block">Foglalok</a>
+            </article>
+            <article class="price-card featured hl hl-orange">
+              <span class="badge">Népszerű</span>
+              <h3 class="price-name">Alap csomag</h3>
+              <p class="price-sub">200 db golyóval</p>
+              <p class="price-value">8&nbsp;000 <span>Ft / fő</span></p>
+              <ul class="price-feat">
+                <li>4 órás pályahasználat</li>
+                <li>Tippmann 98 marker</li>
+                <li>Overál &amp; védőmaszk</li>
+                <li>Lányoknak védőmellény</li>
+                <li>200 db golyó</li>
+              </ul>
+              <p class="price-extra">További golyó: <strong>15 Ft / db</strong></p>
+              <a href="#kapcsolat" class="btn btn-primary btn-block">Foglalok</a>
+            </article>
+          </div>
+        </div>
+        <div class="price-arrows" id="priceArrows" hidden>
+          <button type="button" class="pc-arrow" id="pcPrev" aria-label="Előző csomag">&lsaquo;</button>
+          <button type="button" class="pc-arrow" id="pcNext" aria-label="Következő csomag">&rsaquo;</button>
+        </div>
       </div>
 
       <div class="price-note">

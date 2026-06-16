@@ -55,6 +55,11 @@ közvetlenül a böngészőből szerkeszthető — **backend nélkül**.
   tetején lévő megjegyzés leírja, hogyan generálj újat.
 - **Szerkesztés:** a kijelölt (`data-edit`) mezők szerkeszthetővé válnak.
   A *Mentés* a böngészőbe (localStorage) ment.
+- **Csomagok (árak):** a toolbar **🎫 Csomagok** gombjával külön szerkesztő
+  nyílik, ahol csomagokat lehet **hozzáadni / törölni**, és mindegyikhez
+  megadható **cím, alcím, összeg, jellemzők, extra sor, kiemelés-címke**
+  (a „Népszerű" helyett bármi) és **kiemelési szín** (5 opció). Több csomag
+  esetén az áraknál **nyilakkal, folyamatosan pörgethető** carousel jelenik meg.
 
 ### Hogy lássa MINDENKI a változást?
 

@@ -187,7 +187,7 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
 .card p { color: var(--muted); font-size: .96rem; margin: 0; }
 
 /* ===== Játékmódok (animált jelenetek) ===== */
-.gm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.gm-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; }
 .gm-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: transform .25s, border-color .25s; }
 .gm-card:hover { transform: translateY(-6px); border-color: rgba(255,90,31,.4); }
 .gm-stage { background: linear-gradient(180deg, #26402c 0%, #1a2a1e 60%, #15201a 100%); border-bottom: 1px solid var(--line); }
@@ -266,6 +266,21 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
 .gm-b2 { fill: var(--green); transform-origin: 320px 110px; animation: gmBurst 1.8s ease-out infinite .6s; }
 .gm-b3 { fill: #1fb6ff; transform-origin: 210px 60px; animation: gmBurst 1.8s ease-out infinite 1.2s; }
 @keyframes gmBurst { 0% { transform: scale(0); opacity: .9; } 60% { transform: scale(1.1); opacity: .5; } 100% { transform: scale(1.35); opacity: 0; } }
+
+/* Team Deathmatch: két csapat kereszttűzben */
+.gm-scarf { stroke-width: 4; stroke-linecap: round; fill: none; }
+.gm-scarf-o { stroke: var(--orange); }
+.gm-scarf-g { stroke: var(--green); }
+.gm-tdm { animation: gmBob .8s ease-in-out infinite; }
+.gm-tdmA2, .gm-tdmB1 { animation-delay: -.4s; }
+.gm-tdmB2 { animation-delay: -.2s; }
+.gm-tdm-pb { opacity: 0; }
+.gm-tdm-pbO { fill: var(--orange); animation: tdmShootR 1.5s linear infinite; }
+.gm-tdm-pbO.d2 { animation-delay: .75s; }
+.gm-tdm-pbG { fill: var(--green); animation: tdmShootL 1.5s linear infinite .4s; }
+.gm-tdm-pbG.d2 { animation-delay: 1.15s; }
+@keyframes tdmShootR { 0% { transform: translateX(0); opacity: 0; } 10% { opacity: 1; } 88% { opacity: 1; } 100% { transform: translateX(180px); opacity: 0; } }
+@keyframes tdmShootL { 0% { transform: translateX(0); opacity: 0; } 10% { opacity: 1; } 88% { opacity: 1; } 100% { transform: translateX(-180px); opacity: 0; } }
 
 @media (max-width: 900px) {
   .gm-grid { grid-template-columns: 1fr; max-width: 520px; margin-left: auto; margin-right: auto; }

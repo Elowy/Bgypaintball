@@ -24,39 +24,76 @@
   if (y) y.textContent = new Date().getFullYear();
 })();
 
-/* ===== Cookie consent gate (battle intro) + deferred Facebook SDK ===== */
+/* ===== Cookie consent gate (battle intro) + deferred Facebook feed ===== */
 (function () {
   const KEY = 'bgyp_cookie_consent';
   const gate = document.getElementById('cookieGate');
 
-  function loadFacebook() {
-    if (window.__fbLoaded) return;
-    window.__fbLoaded = true;
-    const s = document.createElement('script');
-    s.async = true; s.defer = true; s.crossOrigin = 'anonymous';
-    s.src = 'https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v19.0';
-    document.body.appendChild(s);
-  }
-  function get() { try { return localStorage.getItem(KEY); } catch (e) { return 'all'; } }
+  function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
   function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
 
-  // Süti-újranyitás máshonnan (footer link)
+  // Facebook SDK betöltése + a feed kirajzolása (megbízhatóan)
+  function ensureFB(cb) {
+    if (window.FB && window.FB.XFBML) { cb && cb(); return; }
+    if (!window.__fbLoading) {
+      window.__fbLoading = true;
+      window.fbAsyncInit = function () {
+        try { FB.init({ xfbml: false, version: 'v19.0' }); } catch (e) {}
+        window.__fbReady = true;
+      };
+      const s = document.createElement('script');
+      s.async = true; s.defer = true; s.crossOrigin = 'anonymous';
+      s.src = 'https://connect.facebook.net/hu_HU/sdk.js';
+      document.body.appendChild(s);
+    }
+    let tries = 0;
+    const t = setInterval(function () {
+      tries++;
+      if (window.FB && window.FB.XFBML) { clearInterval(t); cb && cb(); }
+      else if (tries > 120) { clearInterval(t); } // ~24s után feladjuk
+    }, 200);
+  }
+
+  function showFeed() {
+    const ph = document.getElementById('fbPlaceholder');
+    const page = document.querySelector('.fb-embed .fb-page');
+    if (ph) ph.hidden = true;
+    if (page) page.style.display = '';
+    ensureFB(function () {
+      try { FB.XFBML.parse(document.querySelector('.fb-embed')); } catch (e) {}
+    });
+  }
+
+  function showPlaceholder() {
+    const ph = document.getElementById('fbPlaceholder');
+    const page = document.querySelector('.fb-embed .fb-page');
+    if (page) page.style.display = 'none';
+    if (ph) ph.hidden = false;
+  }
+
+  // A feed manuális betöltése (placeholder gomb) – egyúttal marketing süti elfogadása
+  window.bgypLoadFeed = function () { set('all'); showFeed(); };
+
+  // Süti-újranyitás (footer link)
   window.bgypOpenCookie = function () {
-    if (!gate) return;
-    gate.hidden = false; document.body.classList.add('no-scroll');
+    if (gate) { gate.hidden = false; document.body.classList.add('no-scroll'); }
   };
 
-  if (!gate) { if (get() === 'all') loadFacebook(); return; }
-
-  const dismiss = function () { gate.hidden = true; document.body.classList.remove('no-scroll'); };
   const consent = get();
-  if (!consent) { gate.hidden = false; document.body.classList.add('no-scroll'); }
-  else if (consent === 'all') { loadFacebook(); }
 
-  const all = document.getElementById('cgAll');
-  const nec = document.getElementById('cgNec');
-  if (all) all.addEventListener('click', function () { set('all'); loadFacebook(); dismiss(); });
-  if (nec) nec.addEventListener('click', function () { set('necessary'); dismiss(); });
+  // Facebook feed állapota a hozzájárulás szerint
+  if (consent === 'all') showFeed();
+  else showPlaceholder();
+
+  // Süti-kapu kezelése (csak ha van a lapon)
+  if (gate) {
+    const dismiss = function () { gate.hidden = true; document.body.classList.remove('no-scroll'); };
+    if (!consent) { gate.hidden = false; document.body.classList.add('no-scroll'); }
+    const all = document.getElementById('cgAll');
+    const nec = document.getElementById('cgNec');
+    if (all) all.addEventListener('click', function () { set('all'); showFeed(); dismiss(); });
+    if (nec) nec.addEventListener('click', function () { set('necessary'); showPlaceholder(); dismiss(); });
+  }
 })();
 
 /* ===== Hero háttér parallax ===== */

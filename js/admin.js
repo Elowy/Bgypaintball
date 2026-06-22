@@ -119,7 +119,7 @@
     next.onclick = function () {
       if (animating || !overflowing()) return; animating = true;
       var s = stepPx();
-      track.style.transition = 'transform .4s ease';
+      track.style.transition = 'transform .5s cubic-bezier(.22,.61,.36,1)';
       track.style.transform = 'translateX(-' + s + 'px)';
       track.addEventListener('transitionend', function h() {
         track.removeEventListener('transitionend', h);
@@ -136,7 +136,7 @@
       track.insertBefore(track.lastElementChild, track.firstElementChild);
       track.style.transform = 'translateX(-' + s + 'px)';
       void track.offsetWidth;
-      track.style.transition = 'transform .4s ease';
+      track.style.transition = 'transform .5s cubic-bezier(.22,.61,.36,1)';
       track.style.transform = 'translateX(0)';
       track.addEventListener('transitionend', function h() {
         track.removeEventListener('transitionend', h);

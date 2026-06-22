@@ -173,10 +173,10 @@
   paints.forEach(function (p) { io.observe(p); });
 })();
 
-/* ===== Scroll reveal ===== */
+/* ===== Scroll reveal (lépcsőzetes) ===== */
 (function () {
   const targets = document.querySelectorAll(
-    '.section-head, .card, .price-card, .gallery-item, .partner, .media-card, .price-note'
+    '.section-head, .card, .price-card, .gm-card, .gallery-item, .partner, .media-card, .price-note, .fb-feed'
   );
   targets.forEach(function (el) { el.classList.add('reveal'); });
 
@@ -185,13 +185,20 @@
     return;
   }
   const io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in');
-        io.unobserve(entry.target);
-      }
+    // Egyszerre megjelenő elemek dokumentum-sorrendben, kis késleltetéssel
+    const showing = entries.filter(function (e) { return e.isIntersecting; })
+      .sort(function (a, b) {
+        return a.target.compareDocumentPosition(b.target) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+      });
+    showing.forEach(function (entry, i) {
+      const el = entry.target;
+      const d = Math.min(i, 6) * 75;
+      el.style.transitionDelay = d + 'ms';
+      el.classList.add('in');
+      io.unobserve(el);
+      setTimeout(function () { el.style.transitionDelay = ''; }, 1000 + d);
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
   targets.forEach(function (el) { io.observe(el); });
 })();

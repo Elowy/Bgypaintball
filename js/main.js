@@ -24,6 +24,61 @@
   if (y) y.textContent = new Date().getFullYear();
 })();
 
+/* ===== Cookie consent gate (battle intro) + deferred Facebook SDK ===== */
+(function () {
+  const KEY = 'bgyp_cookie_consent';
+  const gate = document.getElementById('cookieGate');
+
+  function loadFacebook() {
+    if (window.__fbLoaded) return;
+    window.__fbLoaded = true;
+    const s = document.createElement('script');
+    s.async = true; s.defer = true; s.crossOrigin = 'anonymous';
+    s.src = 'https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v19.0';
+    document.body.appendChild(s);
+  }
+  function get() { try { return localStorage.getItem(KEY); } catch (e) { return 'all'; } }
+  function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+
+  // Süti-újranyitás máshonnan (footer link)
+  window.bgypOpenCookie = function () {
+    if (!gate) return;
+    gate.hidden = false; document.body.classList.add('no-scroll');
+  };
+
+  if (!gate) { if (get() === 'all') loadFacebook(); return; }
+
+  const dismiss = function () { gate.hidden = true; document.body.classList.remove('no-scroll'); };
+  const consent = get();
+  if (!consent) { gate.hidden = false; document.body.classList.add('no-scroll'); }
+  else if (consent === 'all') { loadFacebook(); }
+
+  const all = document.getElementById('cgAll');
+  const nec = document.getElementById('cgNec');
+  if (all) all.addEventListener('click', function () { set('all'); loadFacebook(); dismiss(); });
+  if (nec) nec.addEventListener('click', function () { set('necessary'); dismiss(); });
+})();
+
+/* ===== Hero háttér parallax ===== */
+(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const hero = document.querySelector('.hero');
+  const bg = document.getElementById('heroSlideshow');
+  if (!hero || !bg) return;
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      const y = window.pageYOffset || 0;
+      if (y < hero.offsetHeight + 100) bg.style.transform = 'translate3d(0,' + (y * 0.3) + 'px,0)';
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
 /* ===== Hero background slideshow ===== */
 (function () {
   const slides = Array.prototype.slice.call(

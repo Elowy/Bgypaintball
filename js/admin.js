@@ -53,8 +53,52 @@
     fields().forEach(function (el) { map[el.getAttribute('data-edit')] = el.innerHTML.trim(); });
     return map;
   }
-  // teljes tartalom-térkép (szövegek + csomagok)
-  function buildMap() { var m = collectAll(); m.packages = packages; return m; }
+  // teljes tartalom-térkép: a tárolt kulcsokat megőrzi (pl. más oldalak,
+  // adatvédelmi mezők), és felülírja a jelenlegi oldalon szerkesztettekkel.
+  function buildMap() { var m = Object.assign({}, getStored(), collectAll()); m.packages = packages; return m; }
+
+  /* ---------- Adatvédelmi adatok (más oldalon jelennek meg) ---------- */
+  var PRIVACY_FIELDS = [
+    ['privacy.controllerName', 'Adatkezelő neve', 'text', 'Bgyarmatpaintball'],
+    ['privacy.controllerAddress', 'Cím / székhely', 'text', '2660 Balassagyarmat, Fenyves út'],
+    ['privacy.email', 'E-mail', 'text', 'bgyarmatpaintball@gmail.com'],
+    ['privacy.phone', 'Telefon', 'text', '06 30 720 84 99'],
+    ['privacy.website', 'Weboldal', 'text', 'bgyarmatpaintball.hu'],
+    ['privacy.regInfo', 'Nyilvántartási / adószám', 'text', '(egyéni vállalkozó vagy cég nyilvántartási száma, adószáma)'],
+    ['privacy.hosting', 'Tárhelyszolgáltató', 'area', '(a tárhelyszolgáltató neve és elérhetősége)'],
+    ['privacy.updated', 'Hatály / frissítés dátuma', 'text', '2026.']
+  ];
+
+  function openPrivacyEditor() {
+    if (document.getElementById('privEditor')) return;
+    var stored = getStored();
+    var rows = PRIVACY_FIELDS.map(function (f) {
+      var v = (stored[f[0]] != null) ? stored[f[0]] : f[3];
+      var input = f[2] === 'area'
+        ? '<textarea data-k="' + f[0] + '">' + esc(v) + '</textarea>'
+        : '<input data-k="' + f[0] + '" value="' + attr(v) + '">';
+      return '<div class="priv-row"><label>' + f[1] + '</label>' + input + '</div>';
+    }).join('');
+    var wrap = document.createElement('div');
+    wrap.className = 'pkg-editor'; wrap.id = 'privEditor';
+    wrap.innerHTML =
+      '<div class="pkg-card"><div class="pkg-head"><h3>Adatvédelmi adatok</h3></div>' +
+      '<div class="pkg-body" style="gap:.8rem">' + rows + '</div>' +
+      '<div class="pkg-foot"><button type="button" class="btn btn-primary" id="privSave">Mentés</button>' +
+      '<button type="button" class="btn btn-ghost" id="privCancel">Mégse</button></div></div>';
+    document.body.appendChild(wrap);
+    function close() { wrap.remove(); }
+    wrap.querySelector('#privCancel').onclick = close;
+    wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
+    wrap.querySelector('#privSave').onclick = function () {
+      var m = getStored();
+      wrap.querySelectorAll('[data-k]').forEach(function (el) { m[el.getAttribute('data-k')] = el.value.trim(); });
+      setStored(m);
+      applyContent(m);
+      close();
+      toast('Adatvédelmi adatok mentve. Az adatvédelem oldalon jelennek meg; élesítéshez exportálj!');
+    };
+  }
 
   /* ---------- Csomagok (árazás) ---------- */
   var COLORS = [['none', 'Nincs'], ['orange', 'Narancs'], ['green', 'Zöld'], ['blue', 'Kék'], ['purple', 'Lila'], ['yellow', 'Sárga']];
@@ -294,6 +338,7 @@
     bar.innerHTML =
       '<span class="ttl">🎯 Admin szerkesztő</span>' +
       '<button type="button" class="btn btn-ghost" id="abPackages">🎫 Csomagok</button>' +
+      '<button type="button" class="btn btn-ghost" id="abPrivacy">🔒 Adatvédelem</button>' +
       '<button type="button" class="btn btn-primary" id="abSave">Mentés</button>' +
       '<button type="button" class="btn btn-ghost" id="abExport">Exportálás (JSON)</button>' +
       '<label class="btn btn-ghost" for="abImportFile">Importálás</label>' +
@@ -303,6 +348,7 @@
     document.body.appendChild(bar);
 
     bar.querySelector('#abPackages').addEventListener('click', openPackageEditor);
+    bar.querySelector('#abPrivacy').addEventListener('click', openPrivacyEditor);
     bar.querySelector('#abSave').addEventListener('click', save);
     bar.querySelector('#abExport').addEventListener('click', exportJSON);
     bar.querySelector('#abReset').addEventListener('click', resetAll);

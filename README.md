@@ -75,6 +75,17 @@ A localStorage csak a saját böngésződben őrzi a módosítást. Élesítésh
 > rejti — nem erős biztonság. Valódi tartalom módosításához a `content.json`
 > tárhelyre töltése (commit) szükséges, ahhoz pedig hozzáférés kell.
 
+## Süti-elfogadás és adatvédelem
+
+- **Süti-kapu:** az első látogatáskor egy teljes képernyős, animált csata-jelenet
+  fogad a süti-elfogadással. A marketing sütik (Facebook feed) **csak elfogadás
+  után** töltődnek be. A választás a böngészőben tárolódik; a lábléc „Süti
+  beállítások" gombjával újra előhívható.
+- **Adatvédelmi tájékoztató:** külön oldal (`adatvedelem.html`). A benne lévő
+  adatkezelői adatok (név, cím, e-mail, telefon, tárhelyszolgáltató, dátum stb.)
+  az admin szerkesztőben a **🔒 Adatvédelem** gombbal állíthatók, és a megszokott
+  módon (Export → `content.json`) tehetők élesbe.
+
 ## Helyi futtatás
 
 Nincs build lépés. Elég megnyitni az `index.html`-t böngészőben, vagy egy

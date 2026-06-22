@@ -323,11 +323,12 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
 
 /* Csomag-carousel */
 .price-carousel { max-width: 1000px; margin: 3rem auto 0; }
-.price-viewport { overflow: hidden; }
+.price-viewport { overflow: hidden; padding: 22px 0 30px; }
 .price-track { display: flex; gap: 1.8rem; justify-content: center; will-change: transform; }
 .price-track.is-carousel { justify-content: flex-start; }
 .price-track > .price-card { flex: 0 0 300px; max-width: 300px; }
-.price-arrows { display: flex; gap: 1rem; justify-content: center; margin-top: 1.7rem; }
+.price-arrows { gap: 1rem; justify-content: center; margin-top: .3rem; }
+.price-arrows:not([hidden]) { display: flex; }
 .pc-arrow {
   width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line);
   background: var(--surface); color: var(--text); font-size: 1.7rem; line-height: 1;

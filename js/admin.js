@@ -53,9 +53,16 @@
     fields().forEach(function (el) { map[el.getAttribute('data-edit')] = el.innerHTML.trim(); });
     return map;
   }
-  // teljes tartalom-térkép: a tárolt kulcsokat megőrzi (pl. más oldalak,
-  // adatvédelmi mezők), és felülírja a jelenlegi oldalon szerkesztettekkel.
-  function buildMap() { var m = Object.assign({}, getStored(), collectAll()); m.packages = packages; m.promo = promo; return m; }
+  // A betöltött content.json (más oldalak kulcsai is: pl. privacy.*), hogy
+  // mentés/export során ne vesszenek el a jelenlegi oldalon nem szereplő mezők.
+  var baseContent = {};
+
+  // teljes tartalom-térkép: content.json + localStorage + a jelenlegi oldal
+  // [data-edit] mezői (ez utóbbi nyer), plusz csomagok és promó.
+  function buildMap() {
+    var m = Object.assign({}, baseContent, getStored(), collectAll());
+    m.packages = packages; m.promo = promo; return m;
+  }
 
   /* ---------- Promóciós popup ---------- */
   var DEFAULT_PROMO = { enabled: false, title: '🎯 Nyári akció!', text: 'Foglalj most és hozz egy barátot ingyen! Az ajánlat a hónap végéig él.', btnLabel: 'Foglalok', btnLink: '#kapcsolat', color: 'orange' };
@@ -171,7 +178,8 @@
     if (document.getElementById('privEditor')) return;
     var stored = getStored();
     var rows = PRIVACY_FIELDS.map(function (f) {
-      var v = (stored[f[0]] != null) ? stored[f[0]] : f[3];
+      // sorrend: localStorage > content.json > alapértelmezett (ne írjuk felül a valós értékeket)
+      var v = (stored[f[0]] != null) ? stored[f[0]] : (baseContent[f[0]] != null ? baseContent[f[0]] : f[3]);
       var input = f[2] === 'area'
         ? '<textarea data-k="' + f[0] + '">' + esc(v) + '</textarea>'
         : '<input data-k="' + f[0] + '" value="' + attr(v) + '">';
@@ -369,7 +377,7 @@
       var r = await fetch('content.json', { cache: 'no-store' });
       if (r.ok) base = await r.json();
     } catch (e) { /* nincs content.json – alapértelmezett szövegek maradnak */ }
-    if (base) applyContent(base);
+    if (base) { baseContent = base; applyContent(base); }
     applyContent(getStored());
 
     // Csomagok: stored > content.json > alapértelmezett
@@ -488,7 +496,11 @@
         applyContent(map);
         if (Array.isArray(map.packages) && map.packages.length) { packages = map.packages; renderPackages(); }
         if (map.promo && typeof map.promo === 'object') { promo = Object.assign({}, DEFAULT_PROMO, map.promo); refreshPromo(); }
-        setStored(buildMap());
+        // A teljes importált térképet megőrizzük (kereszt-oldali kulcsok is: pl.
+        // privacy.*), a jelenlegi oldal élő mezői pedig felülírják a sajátjaikat.
+        var merged = Object.assign({}, getStored(), map, collectAll());
+        merged.packages = packages; merged.promo = promo;
+        setStored(merged);
         toast('Tartalom importálva és mentve.');
       } catch (err) { toast('Hibás JSON fájl.'); }
     };

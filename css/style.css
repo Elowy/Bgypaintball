@@ -818,3 +818,26 @@ body.admin-editing .site-header { top: 54px; }
   transition: opacity .25s ease, transform .25s ease;
 }
 .admin-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ===== Promóciós popup ===== */
+.promo-pop {
+  position: fixed; left: 50%; bottom: 1.5rem; transform: translateX(-50%) translateY(24px);
+  z-index: 95; width: min(360px, calc(100% - 2rem));
+  background: var(--surface); border: 1px solid var(--line);
+  border-left: 4px solid var(--hlc, var(--orange)); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1.2rem 1.3rem 1.3rem;
+  opacity: 0; visibility: hidden;
+  transition: opacity .35s var(--ease), transform .5s var(--ease-spring), visibility .35s;
+}
+.promo-pop.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+.promo-close {
+  position: absolute; top: .45rem; right: .6rem; background: none; border: 0;
+  color: var(--muted); font-size: 1.55rem; line-height: 1; cursor: pointer; padding: .1rem .3rem;
+  transition: color .2s var(--ease);
+}
+.promo-close:hover { color: var(--text); }
+.promo-title { font-family: var(--display); font-weight: 400; font-size: 1.45rem; letter-spacing: .02em; color: var(--text); margin-bottom: .35rem; padding-right: 1.4rem; }
+.promo-text { color: var(--muted); font-size: .95rem; line-height: 1.55; margin: 0 0 1rem; }
+.promo-pop.hl .promo-btn { background: var(--hlc); border-color: var(--hlc); }
+.promo-pop.hl-green .promo-btn, .promo-pop.hl-yellow .promo-btn { color: #11151b; }
+@media (max-width: 600px) { .promo-pop { bottom: 5.7rem; } }

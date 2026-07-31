@@ -141,7 +141,7 @@
       <ul class="hero-stats">
         <li><span class="num">2</span><span class="lbl">pálya</span></li>
         <li><span class="num">4</span><span class="lbl">óra játék</span></li>
-        <li><span class="num">100+</span><span class="lbl">golyó / fő</span></li>
+        <li><span class="num">100%</span><span class="lbl">feledhetetlen élmény</span></li>
       </ul>
     </div>
     <a href="#bemutatkozas" class="scroll-down" aria-label="Tovább görgetés">&darr;</a>
@@ -676,6 +676,14 @@
       <path d="M12 19V5M6 11l6-6 6 6"/>
     </svg>
   </button>
+
+  <!-- ===== Promóciós popup (admin-ból állítható) ===== -->
+  <div class="promo-pop" id="promoPop" role="dialog" aria-label="Promóció" hidden>
+    <button type="button" class="promo-close" id="promoClose" aria-label="Bezárás">&times;</button>
+    <div class="promo-title" id="promoTitle"></div>
+    <p class="promo-text" id="promoText"></p>
+    <a class="btn btn-primary btn-block promo-btn" id="promoBtn" href="#kapcsolat">Részletek</a>
+  </div>
 
   <!-- ===== Süti-elfogadás belépőkapu csata-animációval ===== -->
   <div class="cookie-gate" id="cookieGate" hidden>

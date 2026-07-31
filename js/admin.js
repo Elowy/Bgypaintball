@@ -55,7 +55,105 @@
   }
   // teljes tartalom-térkép: a tárolt kulcsokat megőrzi (pl. más oldalak,
   // adatvédelmi mezők), és felülírja a jelenlegi oldalon szerkesztettekkel.
-  function buildMap() { var m = Object.assign({}, getStored(), collectAll()); m.packages = packages; return m; }
+  function buildMap() { var m = Object.assign({}, getStored(), collectAll()); m.packages = packages; m.promo = promo; return m; }
+
+  /* ---------- Promóciós popup ---------- */
+  var DEFAULT_PROMO = { enabled: false, title: '🎯 Nyári akció!', text: 'Foglalj most és hozz egy barátot ingyen! Az ajánlat a hónap végéig él.', btnLabel: 'Foglalok', btnLink: '#kapcsolat', color: 'orange' };
+  var promo = Object.assign({}, DEFAULT_PROMO);
+
+  function promoHash(p) { try { return JSON.stringify(p); } catch (e) { return ''; } }
+
+  function maybeShowPromo() {
+    var pop = document.getElementById('promoPop');
+    if (!pop || !promo || !promo.enabled) { if (pop) pop.hidden = true; return; }
+    var gate = document.getElementById('cookieGate');
+    if (gate && !gate.hidden) { setTimeout(maybeShowPromo, 700); return; } // várunk a süti-elfogadásra
+    var h = promoHash(promo);
+    try { if (localStorage.getItem('bgyp_promo_dismissed') === h) return; } catch (e) {}
+    fillPromo(pop, h);
+  }
+
+  function fillPromo(pop, h) {
+    var t = document.getElementById('promoTitle');
+    var x = document.getElementById('promoText');
+    var btn = document.getElementById('promoBtn');
+    if (t) t.textContent = promo.title || '';
+    if (x) x.textContent = promo.text || '';
+    if (btn) {
+      if (promo.btnLabel) { btn.textContent = promo.btnLabel; btn.href = promo.btnLink || '#'; btn.style.display = ''; }
+      else { btn.style.display = 'none'; }
+    }
+    pop.className = 'promo-pop' + (promo.color && promo.color !== 'none' ? ' hl hl-' + promo.color : '');
+    pop.hidden = false;
+    requestAnimationFrame(function () { pop.classList.add('show'); });
+
+    var close = document.getElementById('promoClose');
+    if (close) close.onclick = function () {
+      pop.classList.remove('show');
+      try { localStorage.setItem('bgyp_promo_dismissed', h); } catch (e) {}
+      setTimeout(function () { pop.hidden = true; }, 400);
+    };
+    if (btn) btn.onclick = function () {
+      try { localStorage.setItem('bgyp_promo_dismissed', h); } catch (e) {}
+      pop.classList.remove('show');
+    };
+  }
+
+  function refreshPromo() {
+    // admin mentés után: töröljük az elrejtést, hogy azonnal látszódjon
+    try { localStorage.removeItem('bgyp_promo_dismissed'); } catch (e) {}
+    var pop = document.getElementById('promoPop');
+    if (pop) { pop.classList.remove('show'); pop.hidden = true; }
+    maybeShowPromo();
+  }
+
+  function openPromoEditor() {
+    if (document.getElementById('promoEditor')) return;
+    var p = promo;
+    var sw = COLORS.map(function (c) {
+      return '<span class="pkg-sw' + (p.color === c[0] ? ' sel' : '') + '" data-c="' + c[0] + '" title="' + c[1] + '"></span>';
+    }).join('');
+    var wrap = document.createElement('div');
+    wrap.className = 'pkg-editor'; wrap.id = 'promoEditor';
+    wrap.innerHTML =
+      '<div class="pkg-card"><div class="pkg-head"><h3>Promóciós popup</h3></div>' +
+      '<div class="pkg-body" style="gap:.8rem">' +
+      '  <label style="display:flex;align-items:center;gap:.6rem;color:var(--text);font-weight:600;cursor:pointer">' +
+      '    <input type="checkbox" id="prEnabled"' + (p.enabled ? ' checked' : '') + '> Popup bekapcsolva</label>' +
+      '  <div class="priv-row"><label>Cím</label><input id="prTitle" value="' + attr(p.title) + '"></div>' +
+      '  <div class="priv-row"><label>Szöveg</label><textarea id="prText">' + esc(p.text) + '</textarea></div>' +
+      '  <div class="priv-row"><label>Gomb felirata (üres = nincs gomb)</label><input id="prBtn" value="' + attr(p.btnLabel) + '"></div>' +
+      '  <div class="priv-row"><label>Gomb linkje</label><input id="prLink" value="' + attr(p.btnLink) + '"></div>' +
+      '  <div class="priv-row"><label>Kiemelés színe</label><div class="pkg-swatches" id="prSwatches">' + sw + '</div></div>' +
+      '</div>' +
+      '<div class="pkg-foot"><button type="button" class="btn btn-primary" id="prSave">Mentés</button>' +
+      '<button type="button" class="btn btn-ghost" id="prCancel">Mégse</button></div></div>';
+    document.body.appendChild(wrap);
+    var chosen = p.color || 'none';
+    wrap.querySelector('#prSwatches').addEventListener('click', function (e) {
+      if (!e.target.classList.contains('pkg-sw')) return;
+      chosen = e.target.getAttribute('data-c');
+      wrap.querySelectorAll('#prSwatches .pkg-sw').forEach(function (s) { s.classList.remove('sel'); });
+      e.target.classList.add('sel');
+    });
+    function close() { wrap.remove(); }
+    wrap.querySelector('#prCancel').onclick = close;
+    wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
+    wrap.querySelector('#prSave').onclick = function () {
+      promo = {
+        enabled: wrap.querySelector('#prEnabled').checked,
+        title: wrap.querySelector('#prTitle').value.trim(),
+        text: wrap.querySelector('#prText').value.trim(),
+        btnLabel: wrap.querySelector('#prBtn').value.trim(),
+        btnLink: wrap.querySelector('#prLink').value.trim(),
+        color: chosen
+      };
+      var m = getStored(); m.promo = promo; setStored(m);
+      refreshPromo();
+      close();
+      toast('Promóció mentve. Az élesítéshez exportálj!');
+    };
+  }
 
   /* ---------- Adatvédelmi adatok (más oldalon jelennek meg) ---------- */
   var PRIVACY_FIELDS = [
@@ -279,6 +377,10 @@
     if (Array.isArray(merged.packages) && merged.packages.length) packages = merged.packages;
     renderPackages();
 
+    // Promóció: stored > content.json > alapértelmezett
+    if (merged.promo && typeof merged.promo === 'object') promo = Object.assign({}, DEFAULT_PROMO, merged.promo);
+    setTimeout(maybeShowPromo, 1800);
+
     if (location.hash === '#admin') openLogin();
     window.addEventListener('hashchange', function () {
       if (location.hash === '#admin') openLogin();
@@ -338,6 +440,7 @@
     bar.innerHTML =
       '<span class="ttl">🎯 Admin szerkesztő</span>' +
       '<button type="button" class="btn btn-ghost" id="abPackages">🎫 Csomagok</button>' +
+      '<button type="button" class="btn btn-ghost" id="abPromo">📣 Promóció</button>' +
       '<button type="button" class="btn btn-ghost" id="abPrivacy">🔒 Adatvédelem</button>' +
       '<button type="button" class="btn btn-primary" id="abSave">Mentés</button>' +
       '<button type="button" class="btn btn-ghost" id="abExport">Exportálás (JSON)</button>' +
@@ -348,6 +451,7 @@
     document.body.appendChild(bar);
 
     bar.querySelector('#abPackages').addEventListener('click', openPackageEditor);
+    bar.querySelector('#abPromo').addEventListener('click', openPromoEditor);
     bar.querySelector('#abPrivacy').addEventListener('click', openPrivacyEditor);
     bar.querySelector('#abSave').addEventListener('click', save);
     bar.querySelector('#abExport').addEventListener('click', exportJSON);
@@ -383,6 +487,7 @@
         var map = JSON.parse(reader.result);
         applyContent(map);
         if (Array.isArray(map.packages) && map.packages.length) { packages = map.packages; renderPackages(); }
+        if (map.promo && typeof map.promo === 'object') { promo = Object.assign({}, DEFAULT_PROMO, map.promo); refreshPromo(); }
         setStored(buildMap());
         toast('Tartalom importálva és mentve.');
       } catch (err) { toast('Hibás JSON fájl.'); }

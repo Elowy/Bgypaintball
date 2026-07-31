@@ -346,7 +346,13 @@
     if (!fig || !flipper || !span) return;
 
     function place(p) {
-      fig.style.left = Math.round(p.x) + 'px';
+      var x = p.x;
+      // Keskeny kijelzőn a figura maradjon a kártya körül (ne lógjon le a széléről).
+      if (window.innerWidth <= 820) {
+        var maxX = Math.max(4, (card.clientWidth || 300) - 150 - 4);
+        x = Math.min(Math.max(x, 4), maxX);
+      }
+      fig.style.left = Math.round(x) + 'px';
       fig.style.top = Math.round(p.y) + 'px';
       flipper.style.setProperty('--face', p.face);
     }

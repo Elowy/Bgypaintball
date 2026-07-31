@@ -251,53 +251,93 @@
   ];
   var packages = DEFAULT_PACKAGES.slice();
 
-  // Biztosítja, hogy a Rambo (arany) csomag mindig megjelenjen – akkor is, ha
-  // egy korábban elmentett, régi (2 csomagos) lista van tárolva a böngészőben
-  // vagy a szerveren (az felülírná az alapértelmezést, és eltűnne a Rambo).
-  function ensureRambo() {
+  // Rendbe teszi a betöltött csomaglistát – akkor is, ha egy korábban elmentett,
+  // régi lista van tárolva a böngészőben vagy a szerveren (ami felülírná az
+  // alapértelmezést): (1) a régi „Alap csomag" neveket Újonc/Veterán csomagra
+  // cseréli a golyószám/ár alapján, (2) pótolja az arany Rambo csomagot.
+  function normalizePackages() {
+    packages.forEach(function (p) {
+      if (!p) return;
+      if ((p.name || '').trim().toLowerCase() === 'alap csomag') {
+        var tier = (p.sub || '') + ' ' + (p.amount || '');
+        p.name = /(^|\D)(200|8[\s ]*000)/.test(tier) ? 'Veterán csomag' : 'Újonc csomag';
+      }
+    });
     var has = packages.some(function (p) {
       return p && (p.color === 'gold' || /rambo/i.test(p.name || ''));
     });
-    if (has) return;
-    var rambo = null;
-    for (var i = 0; i < DEFAULT_PACKAGES.length; i++) {
-      if (DEFAULT_PACKAGES[i].color === 'gold') { rambo = DEFAULT_PACKAGES[i]; break; }
+    if (!has) {
+      var rambo = null;
+      for (var i = 0; i < DEFAULT_PACKAGES.length; i++) {
+        if (DEFAULT_PACKAGES[i].color === 'gold') { rambo = DEFAULT_PACKAGES[i]; break; }
+      }
+      if (rambo) packages = packages.concat([JSON.parse(JSON.stringify(rambo))]);
     }
-    if (rambo) packages = packages.concat([JSON.parse(JSON.stringify(rambo))]);
   }
 
   function esc(s) { s = (s == null ? '' : String(s)); return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function attr(s) { return esc(s).replace(/"/g, '&quot;'); }
 
-  // "Rambo" pálcika-figura, ami az arany (gold) csomag kártyája mögül néha
-  // kibújik, össze-vissza lövöldöz és egy felhőcskén kiírja: ratatatatata!
+  // "Rambo" pálcika-figura az arany (gold) csomaghoz: össze-vissza felbukkan a
+  // kártya körül, bukfencet vet, és váltakozva lövöldöz / rakétázik / bombázik.
+  // A pozíciót és az akciót a main.js (window.bgypInitRambo) vezérli.
   var RAMBO_SCENE =
     '<div class="rambo" aria-hidden="true">' +
-      '<div class="rambo-cloud"><span>ratatatatata!</span></div>' +
       '<div class="rambo-fig">' +
-        '<svg viewBox="0 0 180 120" width="164" height="109">' +
-          '<circle class="rb-pb rb-pb1" cx="140" cy="30" r="4"/>' +
-          '<circle class="rb-pb rb-pb2" cx="140" cy="30" r="4"/>' +
-          '<circle class="rb-pb rb-pb3" cx="140" cy="30" r="4"/>' +
-          '<circle class="rb-pb rb-pb4" cx="140" cy="30" r="4"/>' +
-          '<path class="rb-flash" d="M140 30 l16 -6 l-11 6 l14 3 l-15 1 l7 9 l-10 -7 l-2 12 l-2 -13 z"/>' +
-          '<g class="rb-body">' +
-            '<line class="rb-limb" x1="74" y1="90" x2="64" y2="118"/>' +
-            '<line class="rb-limb" x1="74" y1="90" x2="86" y2="118"/>' +
-            '<line class="rb-torso" x1="74" y1="52" x2="74" y2="90"/>' +
-            '<line class="rb-belt" x1="60" y1="58" x2="90" y2="82"/>' +
-            '<line class="rb-limb" x1="74" y1="60" x2="96" y2="52"/>' +
-            '<circle class="rb-head" cx="74" cy="40" r="12"/>' +
-            '<path class="rb-bandana" d="M61 38 q13 -8 26 0"/>' +
-            '<line class="rb-bandtail" x1="61" y1="39" x2="49" y2="44"/>' +
-            '<line class="rb-bandtail" x1="61" y1="42" x2="50" y2="51"/>' +
-            '<g class="rb-gunarm">' +
-              '<line class="rb-limb" x1="74" y1="56" x2="98" y2="44"/>' +
-              '<line class="rb-marker" x1="90" y1="46" x2="140" y2="30"/>' +
-              '<line class="rb-hopper" x1="112" y1="40" x2="110" y2="29"/>' +
+        '<div class="rambo-cloud"><span>ratatatatata!</span></div>' +
+        '<div class="rb-flipper">' +
+          '<svg viewBox="0 0 190 135" width="150" height="107">' +
+            '<g class="rb-boom">' +
+              '<circle class="rb-boom-ring" cx="158" cy="30" r="6"/>' +
+              '<path class="rb-boom-star" d="M158 8 l6 16 16 6 -16 6 -6 16 -6 -16 -16 -6 16 -6 z"/>' +
             '</g>' +
-          '</g>' +
-        '</svg>' +
+            '<g class="rb-proj-gun">' +
+              '<path class="rb-flash" d="M140 30 l16 -6 l-11 6 l14 3 l-15 1 l7 9 l-10 -7 l-2 12 l-2 -13 z"/>' +
+              '<circle class="rb-pb rb-pb1" cx="140" cy="30" r="4"/>' +
+              '<circle class="rb-pb rb-pb2" cx="140" cy="30" r="4"/>' +
+              '<circle class="rb-pb rb-pb3" cx="140" cy="30" r="4"/>' +
+              '<circle class="rb-pb rb-pb4" cx="140" cy="30" r="4"/>' +
+            '</g>' +
+            '<g class="rb-proj-rocket"><g class="rb-rocket">' +
+              '<path class="rb-rk-flame" d="M0 -3 L-12 0 L0 3 Z"/>' +
+              '<polygon class="rb-rk-body" points="0,-4 15,-4 22,0 15,4 0,4"/>' +
+              '<polygon class="rb-rk-fin" points="0,-4 -6,-9 -1,-4"/>' +
+              '<polygon class="rb-rk-fin" points="0,4 -6,9 -1,4"/>' +
+            '</g></g>' +
+            '<g class="rb-proj-bomb"><g class="rb-bomb">' +
+              '<circle class="rb-bomb-body" cx="0" cy="0" r="7"/>' +
+              '<rect class="rb-bomb-neck" x="-2.5" y="-11" width="5" height="5" rx="1"/>' +
+              '<path class="rb-bomb-fuse" d="M0 -10 q7 -5 3 -13"/>' +
+              '<circle class="rb-bomb-spark" cx="2.5" cy="-24" r="2.5"/>' +
+            '</g></g>' +
+            '<g class="rb-body">' +
+              '<line class="rb-limb" x1="74" y1="88" x2="64" y2="116"/>' +
+              '<line class="rb-limb" x1="74" y1="88" x2="86" y2="116"/>' +
+              '<line class="rb-torso" x1="74" y1="50" x2="74" y2="88"/>' +
+              '<line class="rb-belt" x1="60" y1="56" x2="90" y2="80"/>' +
+              '<circle class="rb-head" cx="74" cy="38" r="12"/>' +
+              '<path class="rb-bandana" d="M61 36 q13 -8 26 0"/>' +
+              '<line class="rb-bandtail" x1="61" y1="37" x2="49" y2="42"/>' +
+              '<line class="rb-bandtail" x1="61" y1="40" x2="50" y2="49"/>' +
+              '<g class="rb-arm rb-arm-gun">' +
+                '<line class="rb-limb" x1="74" y1="58" x2="56" y2="66"/>' +
+                '<line class="rb-limb" x1="74" y1="56" x2="98" y2="44"/>' +
+                '<line class="rb-marker" x1="90" y1="46" x2="140" y2="30"/>' +
+                '<line class="rb-hopper" x1="112" y1="40" x2="110" y2="29"/>' +
+              '</g>' +
+              '<g class="rb-arm rb-arm-rocket">' +
+                '<line class="rb-limb" x1="74" y1="58" x2="94" y2="50"/>' +
+                '<line class="rb-limb" x1="74" y1="56" x2="96" y2="38"/>' +
+                '<rect class="rb-launcher" x="90" y="30" width="54" height="12" rx="3"/>' +
+                '<rect class="rb-launcher-cap" x="86" y="32" width="8" height="8" rx="2"/>' +
+              '</g>' +
+              '<g class="rb-arm rb-arm-bomb">' +
+                '<line class="rb-limb" x1="74" y1="58" x2="58" y2="66"/>' +
+                '<line class="rb-limb rb-bombarm" x1="74" y1="56" x2="92" y2="28"/>' +
+              '</g>' +
+            '</g>' +
+          '</svg>' +
+        '</div>' +
       '</div>' +
     '</div>';
 
@@ -322,6 +362,7 @@
     if (!track) return;
     track.innerHTML = packages.map(pkgCardHTML).join('');
     setupCarousel();
+    if (window.bgypInitRambo) window.bgypInitRambo();
   }
 
   function setupCarousel() {
@@ -340,8 +381,8 @@
       return c.getBoundingClientRect().width + gap;
     }
     function update() {
-      if (overflowing()) { track.classList.add('is-carousel'); arrows.hidden = false; }
-      else { track.classList.remove('is-carousel'); arrows.hidden = true; track.style.transform = ''; }
+      if (overflowing()) { track.classList.add('is-carousel'); arrows.hidden = false; viewport.classList.add('clip'); }
+      else { track.classList.remove('is-carousel'); arrows.hidden = true; track.style.transform = ''; viewport.classList.remove('clip'); }
     }
     update();
     window.removeEventListener('resize', track._upd || function () {});
@@ -477,7 +518,7 @@
     // Csomagok: stored > content.json > alapértelmezett
     var merged = Object.assign({}, base || {}, getStored());
     if (Array.isArray(merged.packages) && merged.packages.length) packages = merged.packages;
-    ensureRambo();
+    normalizePackages();
     renderPackages();
 
     // Promóció: stored > content.json > alapértelmezett

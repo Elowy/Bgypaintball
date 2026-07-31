@@ -305,6 +305,84 @@
   });
 })();
 
+/* ===== Rambo-figura vezérlő: össze-vissza felbukkan a kártya körül ===== */
+(function () {
+  var timer = null;
+  var lastPos = -1, lastAct = -1;
+  var ACTIONS = [
+    { cls: 'act-shoot',  text: 'ratatatatata!' },
+    { cls: 'act-rocket', text: 'fssss… BUMM! 🚀' },
+    { cls: 'act-bomb',   text: 'kapd el… BUMM! 💥' }
+  ];
+  function pick(n, last) {
+    if (n <= 1) return 0;
+    var i; do { i = Math.floor(Math.random() * n); } while (i === last);
+    return i;
+  }
+  // Felbukkanási helyek a kártya körül (bal/jobb/fent/lent), a "face" a fordulás.
+  function positions(w, h) {
+    var FW = 150, FH = 107;
+    return [
+      { x: w * 0.04,            y: -FH * 0.72,   face:  1 },
+      { x: w * 0.5 - FW * 0.5,  y: -FH * 0.82,   face:  1 },
+      { x: w - FW * 0.82,       y: -FH * 0.72,   face: -1 },
+      { x: -FW * 0.52,          y: h * 0.16,     face:  1 },
+      { x: -FW * 0.46,          y: h * 0.48,     face:  1 },
+      { x: w - FW * 0.46,       y: h * 0.18,     face: -1 },
+      { x: w - FW * 0.52,       y: h * 0.5,      face: -1 },
+      { x: -FW * 0.34,          y: h - FH * 0.55,face:  1 },
+      { x: w - FW * 0.64,       y: h - FH * 0.55,face: -1 }
+    ];
+  }
+  function stop() { if (timer) { clearTimeout(timer); timer = null; } }
+
+  window.bgypInitRambo = function () {
+    stop();
+    var card = document.querySelector('.price-card.has-rambo');
+    if (!card) return;
+    var fig = card.querySelector('.rambo-fig');
+    var flipper = fig && fig.querySelector('.rb-flipper');
+    var span = fig && fig.querySelector('.rambo-cloud span');
+    if (!fig || !flipper || !span) return;
+
+    function place(p) {
+      fig.style.left = Math.round(p.x) + 'px';
+      fig.style.top = Math.round(p.y) + 'px';
+      flipper.style.setProperty('--face', p.face);
+    }
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      place(positions(card.clientWidth || 300, card.clientHeight || 520)[2]);
+      span.textContent = 'ratatatatata!';
+      fig.className = 'rambo-fig act-shoot show';
+      return;
+    }
+
+    function cycle() {
+      var P = positions(card.clientWidth || 300, card.clientHeight || 520);
+      var pi = pick(P.length, lastPos); lastPos = pi;
+      var ai = pick(ACTIONS.length, lastAct); lastAct = ai;
+      place(P[pi]);
+      span.textContent = ACTIONS[ai].text;
+      fig.className = 'rambo-fig ' + ACTIONS[ai].cls;   // reset
+      void fig.offsetWidth;                             // reflow -> bukfenc újraindul
+      fig.classList.add('entering', 'show');
+      setTimeout(function () { fig.classList.remove('entering'); }, 640);
+      timer = setTimeout(function () {
+        fig.classList.remove('show');
+        timer = setTimeout(cycle, 900 + Math.random() * 1500);
+      }, 2600);
+    }
+    timer = setTimeout(cycle, 700);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { window.bgypInitRambo(); });
+  } else {
+    window.bgypInitRambo();
+  }
+})();
+
 /* ===== Paintball splatter on scroll ===== */
 (function () {
   const paints = document.querySelectorAll('.paint');

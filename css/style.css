@@ -451,9 +451,11 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
 
 /* Csomag-carousel */
 .price-carousel { max-width: 1000px; margin: .6rem auto 0; }
-/* A felső belső margó adja a helyet a Rambo-figurának, hogy a kártya
-   mögül felbukkanhasson (a viewport levágja a széleken túllógót). */
-.price-viewport { overflow: hidden; padding: 104px 0 30px; }
+/* A Rambo-figura a kártya körül bukkan fel, ezért a viewport alapból nem vág;
+   csak carousel (több csomag) módban kell a vízszintes levágás. A felső belső
+   margó ad helyet a figurának, hogy ne lógjon a fenti szövegbe. */
+.price-viewport { overflow: visible; padding: 96px 0 30px; }
+.price-viewport.clip { overflow: hidden; }
 .price-track { display: flex; gap: 1.8rem; justify-content: center; will-change: transform; }
 .price-track.is-carousel { justify-content: flex-start; }
 .price-track > .price-card { flex: 0 0 300px; max-width: 300px; }
@@ -470,22 +472,23 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
   .price-track > .price-card { flex-basis: 82%; max-width: 82%; }
 }
 
-/* ===== Rambo-figura az arany csomag mögött ===== */
+/* ===== Rambo-figura az arany csomag körül ===== */
 .price-card.has-rambo { overflow: visible; }
-.rambo {
-  position: absolute; left: 0; right: 0; bottom: 100%; height: 104px;
-  overflow: hidden; pointer-events: none;
-}
+.rambo { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 4; }
 .rambo-fig {
-  position: absolute; right: 4px; bottom: 0;
-  transform: translateY(114%);
-  animation: rbPeek 8s var(--ease-inout) infinite;
+  position: absolute; left: 0; top: 0; width: 150px; height: 107px;
+  opacity: 0; transition: opacity .28s ease;
 }
-.rambo-fig svg { display: block; overflow: visible; }
-@keyframes rbPeek {
-  0%, 6%   { transform: translateY(114%); }
-  13%, 44% { transform: translateY(0); }
-  52%,100% { transform: translateY(114%); }
+.rambo-fig.show { opacity: 1; }
+.rambo-fig svg { display: block; width: 150px; height: 107px; overflow: visible; }
+
+/* Bukfenc-belépő + irány (balra/jobbra fordulás a --face alapján) */
+.rb-flipper { transform-origin: 50% 55%; transform: scaleX(var(--face, 1)); }
+.rambo-fig.entering .rb-flipper { animation: rbFlip .62s cubic-bezier(.3,1.25,.5,1); }
+@keyframes rbFlip {
+  0%   { transform: scaleX(var(--face,1)) translateY(48px) rotate(0)      scale(.35); }
+  55%  { transform: scaleX(var(--face,1)) translateY(-8px) rotate(360deg) scale(1.08); }
+  100% { transform: scaleX(var(--face,1)) translateY(0)    rotate(360deg) scale(1); }
 }
 
 /* Testrészek */
@@ -496,63 +499,88 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
 .rb-bandana { fill: none; stroke: #e23b3b; stroke-width: 5; stroke-linecap: round; }
 .rb-bandtail { stroke: #e23b3b; stroke-width: 3; stroke-linecap: round; }
 .rb-belt { stroke: #f2c14e; stroke-width: 3.5; stroke-linecap: round; stroke-dasharray: 2 4.5; }
-.rb-marker { stroke: #0c0f13; stroke-width: 5; stroke-linecap: round; }
-.rb-hopper { stroke: #0c0f13; stroke-width: 4; stroke-linecap: round; }
+.rb-marker, .rb-hopper { stroke: #0c0f13; stroke-linecap: round; fill: none; }
+.rb-marker { stroke-width: 5; }
+.rb-hopper { stroke-width: 4; }
+.rb-launcher { fill: #2b3038; stroke: #0c0f13; stroke-width: 1.5; }
+.rb-launcher-cap { fill: #12151b; }
 
-/* Fegyvertartó kar visszarúgása */
-.rb-gunarm {
-  transform-box: view-box; transform-origin: 74px 56px;
-  animation: rbRecoil .17s ease-in-out infinite;
-}
+/* Fegyver + lövedék láthatóság akció szerint */
+.rb-arm-gun, .rb-arm-rocket, .rb-arm-bomb,
+.rb-proj-gun, .rb-proj-rocket, .rb-proj-bomb, .rb-boom { display: none; }
+.act-shoot  .rb-arm-gun,    .act-shoot  .rb-proj-gun    { display: inline; }
+.act-rocket .rb-arm-rocket, .act-rocket .rb-proj-rocket, .act-rocket .rb-boom { display: inline; }
+.act-bomb   .rb-arm-bomb,   .act-bomb   .rb-proj-bomb,   .act-bomb   .rb-boom { display: inline; }
+
+/* --- Géppuska (ratatata) --- */
+.act-shoot .rb-arm-gun { transform-box: view-box; transform-origin: 74px 56px; animation: rbRecoil .17s ease-in-out infinite; }
 @keyframes rbRecoil { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-8deg); } }
-
-/* Torkolattűz */
-.rb-flash {
-  fill: #ffd45e; transform-box: view-box; transform-origin: 140px 30px;
-  animation: rbFlash .17s steps(2, end) infinite;
-}
-@keyframes rbFlash {
-  0%, 55% { opacity: 0; transform: scale(.3); }
-  65%     { opacity: 1; transform: scale(1); }
-  100%    { opacity: 0; transform: scale(.5); }
-}
-
-/* Össze-vissza kilőtt festékgolyók */
+.rb-flash { fill: #ffd45e; transform-box: view-box; transform-origin: 140px 30px; animation: rbFlash .17s steps(2,end) infinite; }
+@keyframes rbFlash { 0%,55% { opacity:0; transform:scale(.3);} 65%{opacity:1;transform:scale(1);} 100%{opacity:0;transform:scale(.5);} }
 .rb-pb { transform-box: view-box; opacity: 0; }
-.rb-pb1 { fill: #ff5a1f; --dx: 30px;  --dy: -22px; animation: rbSpray .5s linear infinite; }
-.rb-pb2 { fill: #39ff7a; --dx: 34px;  --dy: 2px;   animation: rbSpray .5s linear infinite .12s; }
-.rb-pb3 { fill: #1fb6ff; --dx: 24px;  --dy: -34px; animation: rbSpray .5s linear infinite .24s; }
-.rb-pb4 { fill: #ffd400; --dx: 33px;  --dy: -10px; animation: rbSpray .5s linear infinite .36s; }
-@keyframes rbSpray {
-  0%   { opacity: 0; transform: translate(0,0) scale(.5); }
-  12%  { opacity: 1; }
-  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1); }
+.rb-pb1 { fill:#ff5a1f; --dx:34px; --dy:-20px; animation: rbSpray .5s linear infinite; }
+.rb-pb2 { fill:#39ff7a; --dx:38px; --dy:4px;   animation: rbSpray .5s linear infinite .12s; }
+.rb-pb3 { fill:#1fb6ff; --dx:28px; --dy:-34px; animation: rbSpray .5s linear infinite .24s; }
+.rb-pb4 { fill:#ffd400; --dx:36px; --dy:-8px;  animation: rbSpray .5s linear infinite .36s; }
+@keyframes rbSpray { 0%{opacity:0;transform:translate(0,0) scale(.5);} 12%{opacity:1;} 100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1);} }
+
+/* --- Rakétavető --- */
+.rb-rocket { transform-box: view-box; animation: rbRocket 1.4s ease-in infinite; }
+.rb-rk-body { fill: #c9ced6; }
+.rb-rk-fin { fill: #e23b3b; }
+.rb-rk-flame { fill: #ffb02e; animation: rbFlame .12s steps(2) infinite; }
+@keyframes rbFlame { 0%,100%{opacity:.6;} 50%{opacity:1;} }
+@keyframes rbRocket {
+  0%   { transform: translate(120px,38px) scale(.7); opacity: 0; }
+  8%   { opacity: 1; }
+  60%  { transform: translate(158px,30px) scale(1); opacity: 1; }
+  66%,100% { opacity: 0; }
 }
 
-/* "ratatatatata!" felhőcske */
-.rambo-cloud { position: absolute; left: 6px; top: 4px; opacity: 0; animation: rbCloud 8s var(--ease-inout) infinite; }
+/* --- Bomba --- */
+.rb-bomb { transform-box: view-box; animation: rbBomb 1.4s ease-in infinite; }
+.rb-bomb-body { fill: #14171c; stroke: #333a45; stroke-width: 1.5; }
+.rb-bomb-neck { fill: #444b55; }
+.rb-bomb-fuse { fill: none; stroke: #9aa3b2; stroke-width: 2; }
+.rb-bomb-spark { fill: #ffd45e; animation: rbSpark .18s steps(2) infinite; }
+@keyframes rbSpark { 0%,100%{opacity:.5;} 50%{opacity:1;} }
+@keyframes rbBomb {
+  0%   { transform: translate(92px,30px) rotate(0);      opacity: 0; }
+  8%   { opacity: 1; }
+  35%  { transform: translate(126px,8px)  rotate(180deg); }
+  60%  { transform: translate(158px,30px) rotate(360deg); opacity: 1; }
+  66%,100% { opacity: 0; }
+}
+
+/* --- Robbanás (rakéta/bomba becsapódás) --- */
+.rb-boom-ring { fill: none; stroke: #ff5a1f; stroke-width: 3; transform-box: view-box; transform-origin: 158px 30px; opacity: 0; animation: rbRing 1.4s ease-out infinite; }
+.rb-boom-star { fill: #ffd45e; transform-box: view-box; transform-origin: 158px 30px; opacity: 0; animation: rbStar 1.4s ease-out infinite; }
+@keyframes rbRing { 0%,60%{opacity:0;transform:scale(.2);} 66%{opacity:.9;transform:scale(.6);} 90%{opacity:0;transform:scale(2.4);} 100%{opacity:0;} }
+@keyframes rbStar { 0%,60%{opacity:0;transform:scale(.2) rotate(0);} 68%{opacity:1;transform:scale(1.1) rotate(18deg);} 86%{opacity:0;transform:scale(1.5) rotate(36deg);} 100%{opacity:0;} }
+
+/* Szövegbuborék – pont a figura felett */
+.rambo-cloud {
+  position: absolute; left: 50%; bottom: 100%; transform: translateX(-50%);
+  margin-bottom: 3px; opacity: 0; transition: opacity .2s ease .1s;
+}
+.rambo-fig.show .rambo-cloud { opacity: 1; animation: rbCloudWob 1.2s ease-in-out infinite; }
 .rambo-cloud span {
   display: inline-block; position: relative; background: #fff; color: #11151b;
-  font-family: var(--display); font-weight: 400; letter-spacing: .05em; font-size: 1.05rem;
-  padding: .12rem .62rem .16rem; border-radius: 999px; white-space: nowrap;
+  font-family: var(--display); font-weight: 400; letter-spacing: .04em; font-size: 1rem; line-height: 1.15;
+  padding: .12rem .6rem .16rem; border-radius: 999px; white-space: nowrap;
   box-shadow: 0 6px 16px rgba(0,0,0,.35);
 }
 .rambo-cloud span::after {
-  content: ""; position: absolute; right: 14px; bottom: -6px;
+  content: ""; position: absolute; left: 50%; transform: translateX(-50%); bottom: -6px;
   border: 6px solid transparent; border-top-color: #fff; border-bottom: 0;
 }
-@keyframes rbCloud {
-  0%, 10% { opacity: 0; transform: translateY(8px) scale(.7) rotate(-3deg); }
-  16%     { opacity: 1; transform: translateY(0) scale(1) rotate(-3deg); }
-  22%     { transform: translateY(0) scale(1) rotate(2deg); }
-  40%     { opacity: 1; transform: translateY(0) scale(1) rotate(-2deg); }
-  46%,100%{ opacity: 0; transform: translateY(8px) scale(.7) rotate(0); }
-}
+@keyframes rbCloudWob { 0%,100% { transform: translateX(-50%) rotate(-2.5deg); } 50% { transform: translateX(-50%) rotate(2.5deg); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .rambo-fig { animation: none; transform: translateY(0); }
-  .rambo-cloud { animation: none; opacity: 1; }
-  .rb-gunarm, .rb-flash, .rb-pb { animation: none; }
+  .rambo-fig.entering .rb-flipper { animation: none; }
+  .act-shoot .rb-arm-gun, .rb-flash, .rb-pb, .rb-rocket, .rb-rk-flame,
+  .rb-bomb, .rb-bomb-spark, .rb-boom-ring, .rb-boom-star { animation: none; }
+  .rambo-fig.show .rambo-cloud { animation: none; }
   .rb-flash { opacity: 0; }
 }
 

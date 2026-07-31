@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pályaszabályzat – Bgyarmatpaintball</title>
+  <style>
+    :root { --ink:#15181c; --muted:#555; --accent:#e2440f; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { font-family: "Segoe UI", Arial, sans-serif; color: var(--ink); background: #f2f2f2; line-height: 1.42; font-size: 11.5px; }
+    .page { width: 210mm; min-height: 297mm; margin: 12px auto; padding: 13mm 15mm 11mm; background: #fff; box-shadow: 0 6px 24px rgba(0,0,0,.18); }
+    header { display: flex; align-items: center; gap: 13px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+    header img { width: 56px; height: 56px; object-fit: contain; }
+    header .h-title { flex: 1; }
+    header h1 { font-size: 17px; margin: 0 0 2px; letter-spacing: .3px; }
+    header .sub { font-size: 10.5px; color: var(--muted); }
+    header .biz { text-align: right; font-size: 10px; color: var(--muted); line-height: 1.4; }
+    h2 { font-size: 11.5px; margin: 9px 0 3px; padding-bottom: 2px; border-bottom: 1px solid #ddd; color: var(--accent); text-transform: uppercase; letter-spacing: .04em; }
+    p { margin: 4px 0; }
+    ol.rules { margin: 3px 0 0; padding-left: 17px; }
+    ol.rules li { margin: 2.5px 0; font-size: 10.3px; line-height: 1.38; }
+    .lead { font-size: 10.8px; color: #333; margin-top: 6px; }
+    .danger { background: #fff5f2; border: 1px solid #f3c1ac; border-left: 4px solid var(--accent); border-radius: 6px; padding: 6px 10px; font-size: 10.3px; margin: 5px 0; }
+    .danger p { margin: 3px 0; }
+    .danger strong { color: #a3350f; }
+    .accept { margin-top: 6px; font-size: 10.3px; border: 1px dashed #bbb; border-radius: 6px; padding: 6px 10px; background: #fafafa; }
+    footer { margin-top: 6px; border-top: 1px solid #ddd; padding-top: 4px; font-size: 9px; color: #777; text-align: center; }
+    @media print {
+      body { background: #fff; }
+      .page { margin: 0; box-shadow: none; width: auto; min-height: auto; padding: 8mm 13mm 5mm; }
+      .noprint { display: none !important; }
+    }
+    .toolbar { width: 210mm; margin: 12px auto 0; text-align: right; }
+    .toolbar button { font: inherit; font-size: 12px; padding: 8px 16px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="toolbar noprint"><button onclick="window.print()">🖨️ Nyomtatás / PDF mentés</button></div>
+
+  <div class="page">
+    <header>
+      <img src="../assets/img/logo.png" alt="Bgyarmatpaintball logó" />
+      <div class="h-title">
+        <h1>Pálya- és játékszabályzat</h1>
+        <div class="sub">A paintball pálya biztonságos használatának feltételei</div>
+      </div>
+      <div class="biz">
+        <strong>Bgyarmatpaintball</strong><br />
+        2660 Balassagyarmat, Fenyves út<br />
+        Tel.: 06 30 / 720 84 99<br />
+        bgyarmatpaintball@gmail.com
+      </div>
+    </header>
+
+    <p class="lead">A pálya használatának feltétele a jelen szabályzat megismerése és betartása. A pályára lépéssel
+      a játékos (kiskorú esetén a szülő / törvényes képviselő) a szabályzatot elfogadja. A szabályok megszegése
+      a játékból való <strong>azonnali, térítés nélküli kizárást</strong> vonhatja maga után.</p>
+
+    <h2>1. Általános szabályok</h2>
+    <ol class="rules">
+      <li>A pályát kizárólag a személyzet tájékoztatója (eligazítás) után, annak utasításait betartva lehet használni.</li>
+      <li>A személyzet utasításai a játék teljes ideje alatt kötelező érvényűek; a személyzet a játékot bármikor leállíthatja.</li>
+      <li><strong>16 éven aluli</strong> játékos csak kitöltött és aláírt szülői / törvényes képviselői hozzájáruló nyilatkozattal vehet részt.</li>
+      <li>Tilos a pálya használata <strong>alkohol, kábítószer vagy egyéb tudatmódosító szer</strong> hatása alatt.</li>
+      <li>Aki egészségi állapota miatt (pl. szív- és érrendszeri, légzőszervi betegség, epilepszia, várandósság, közelmúltbeli műtét) nem alkalmas a fokozott fizikai igénybevételre, ne vegyen részt a játékban.</li>
+    </ol>
+
+    <h2>2. Kötelező védőfelszerelés</h2>
+    <ol class="rules">
+      <li>A pálya (játéktér) területén a <strong>védőmaszk viselése végig kötelező</strong>, azt csak a kijelölt, biztonságos zónában szabad levenni.</li>
+      <li class="">A védőmaszk <strong>levétele a játéktéren szigorúan TILOS és életveszélyes</strong> – a szem és az arc sérülésének kockázata miatt.</li>
+      <li>A kiadott felszerelést (marker, maszk, overál) rendeltetésszerűen kell használni; a sérült felszerelést azonnal jelezni kell a személyzetnek.</li>
+    </ol>
+
+    <h2>3. A marker (fegyver) biztonságos használata</h2>
+    <ol class="rules">
+      <li>A markert a játéktéren kívül <strong>mindig biztosított állapotban</strong>, csővédővel (csődugó) kell tartani.</li>
+      <li>Célozni és lőni kizárólag a játéktéren, kizárólag ellenfélre szabad; tilos a pályán kívülre, a személyzetre vagy nézőre irányítani a markert.</li>
+      <li>Tilos a <strong>közelről (kb. 3–5 méteren belül) történő lövés</strong>. Ilyen helyzetben „megadás” (surrender) felszólítással kell kiütni az ellenfelet.</li>
+      <li>Kerülni kell a fejre és a közvetlen közelről leadott lövést.</li>
+      <li>Kizárólag a helyszínen biztosított golyó (festéklabda) használható; saját golyó behozatala tilos.</li>
+    </ol>
+
+    <h2>4. Magatartás a játék során</h2>
+    <ol class="rules">
+      <li>A találatot jelezni kell (kézfeltartás, „OUT/KILŐVE” kiáltás), és a kilőtt játékos a kijelölt úton, felemelt markerrel elhagyja a pályát.</li>
+      <li>Tilos a már kilőtt vagy a pályát elhagyó játékosra lőni.</li>
+      <li>Tilos mindenféle fizikai kontaktus, verekedés, lökdösődés, valamint a másik játékos szándékos veszélyeztetése.</li>
+      <li>Tilos a nem játékra kijelölt helyekre (építmények tetejére, kerítésre) mászni, illetve a fedezékeket rongálni.</li>
+      <li>A pálya és környezete tisztán tartása mindenki felelőssége; dohányozni csak a kijelölt helyen szabad.</li>
+    </ol>
+
+    <h2>5. Felelősség és kockázatvállalás</h2>
+    <div class="danger">
+      <p><strong>A paintball fokozott fizikai igénybevétellel és sérülésveszéllyel járó (pl. zúzódás, horzsolás, esés)
+      sporttevékenység, amelyet minden játékos saját felelősségére, önként vállalva végez.</strong></p>
+      <p>Az üzemeltető a szabályzat és a biztonsági előírások betartása mellett bekövetkező, a saját érdekkörén kívül eső,
+      illetve a játékos vagy más résztvevő <strong>szabályszegéséből eredő sérülésekért, balesetekért és károkért nem vállal
+      felelősséget</strong>. Az ilyen károkért az azt okozó, illetve a szabályt megszegő játékos (kiskorú esetén a szülő /
+      törvényes képviselő) felel.</p>
+    </div>
+    <ol class="rules">
+      <li>A játékos köteles a saját és társai testi épségére ügyelni, és a biztonsági szabályokat maradéktalanul betartani.</li>
+      <li>A felszerelésben, a pálya eszközeiben vagy más személy tulajdonában szándékosan vagy a szabályok megszegésével okozott kárt a károkozó megtéríti.</li>
+      <li>Az üzemeltető nem felel a magára hagyott értéktárgyakért.</li>
+    </ol>
+
+    <h2>6. Egyéb rendelkezések</h2>
+    <ol class="rules">
+      <li>A helyszínen kép- és videófelvétel készülhet; ennek bemutatás célú felhasználásához külön (a nyilatkozatban megadott) hozzájárulás szükséges.</li>
+      <li>A szabályzat súlyos vagy ismételt megszegése a játékból való azonnali, térítés nélküli kizárást eredményezi.</li>
+      <li>Az üzemeltető fenntartja a jogot a szabályzat módosítására.</li>
+    </ol>
+
+    <p class="accept">A pályára lépéssel és a játékban való részvétellel kijelentem, hogy a jelen szabályzatot megismertem,
+      megértettem és magamra (kiskorú esetén gyermekemre) nézve kötelezőnek elfogadom.</p>
+
+    <footer>Bgyarmatpaintball • 2660 Balassagyarmat, Fenyves út • 06 30 / 720 84 99 • bgyarmatpaintball@gmail.com</footer>
+  </div>
+</body>
+</html>

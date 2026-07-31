@@ -86,33 +86,45 @@ A localStorage csak a saját böngésződben őrzi a módosítást. Élesítésh
   az admin szerkesztőben a **🔒 Adatvédelem** gombbal állíthatók, és a megszokott
   módon (Export → `content.json`) tehetők élesbe.
 
-## Automatikus frissítés GitHub merge után (deploy)
+## Automatikus frissítés GitHub merge után (FTP deploy cPanel-re)
 
 A repóban van egy kész GitHub Actions workflow (`.github/workflows/deploy.yml`),
-amely **minden `main`/`master` ágra történő push (pl. PR merge) után automatikusan
-kiteszi a weboldalt GitHub Pages-re**. Teendők egyszer:
+amely **minden `main`/`master` ágra történő push (pl. PR merge) után FTP-n
+feltölti a weboldalt a tárhelyre** (`SamKirkland/FTP-Deploy-Action`).
 
-1. **GitHub → Settings → Pages → Build and deployment → Source:** válaszd a
-   **„GitHub Actions"** lehetőséget.
-2. Ellenőrizd: **Settings → Actions → General → Workflow permissions** engedélyezze
-   az Actions futását (alapból jó).
-3. Ezután merge-ölj egy PR-t a `main` ágra → a workflow lefut, és pár perc múlva
-   frissül az oldal. Az állapot a **GitHub → Actions** fülön látszik.
-4. Az admin szerkesztőből exportált **`content.json`-t** és a feltöltött képeket
-   is elég a `main` ágra commitolni – a deploy ezeket is kiteszi, így a
+### Ehhez megadandó GitHub Secrets
+
+**GitHub → Settings → Secrets and variables → Actions → New repository secret**,
+és hozd létre az alábbi 3 titkot:
+
+| Secret neve      | Érték                                                        |
+|------------------|-------------------------------------------------------------|
+| `FTP_SERVER`     | az FTP szerver címe (pl. `ftp.bgyarmatpaintball.hu` vagy IP) |
+| `FTP_USERNAME`   | az FTP-fiók felhasználóneve (cPanel → FTP-fiókok)            |
+| `FTP_PASSWORD`   | az FTP-fiók jelszava                                         |
+
+> A titkokat a GitHub titkosítva tárolja; a naplókban nem jelennek meg.
+
+### A workflow-ban ellenőrizd / állítsd be
+
+- **`server-dir`** – a tárhely webgyökere. cPanel-nél általában `public_html/`
+  (ha aldomainre / almappába megy, pl. `public_html/uj/`).
+- **`protocol`** – `ftps` (titkosított, ajánlott). Ha a tárhely nem támogatja,
+  vagy tanúsítványhiba van, állítsd `ftp`-re.
+- **`port`** – általában `21`.
+
+### Használat
+
+1. Add meg a fenti 3 secretet.
+2. Igazítsd a `server-dir`-t a tárhelyed webgyökeréhez.
+3. Merge-ölj egy PR-t a `main` ágra → a workflow lefut és feltölti a változásokat
+   (csak a módosult fájlokat). Állapot: **GitHub → Actions** fül.
+4. Az admin szerkesztőből exportált **`content.json`-t** és a feltöltött képeket is
+   elég a `main` ágra commitolni – a deploy ezeket is kiteszi, így a
    szövegek/árak/promóció élesben frissülnek.
 
-**Saját domain (bgyarmatpaintball.hu) GitHub Pages-en:** Settings → Pages →
-Custom domain mezőbe írd be a domaint, hozz létre egy `CNAME` fájlt a repó
-gyökerében a domainnel, és a domain szolgáltatónál állítsd be a DNS-t
-(a GitHub Pages A-rekordjaira / `<felhasználó>.github.io` CNAME-re).
-
-**Alternatívák (ha nem GitHub Pages-t használsz):**
-- **Netlify / Vercel:** kösd össze a GitHub repót; minden push/merge után
-  automatikusan deploy-ol, workflow nélkül. (Custom domain a szolgáltatónál.)
-- **Meglévő tárhely (cPanel / FTP):** használj FTP-deploy Actiont (pl.
-  `SamKirkland/FTP-Deploy-Action`), a tárhely adatait **GitHub Secrets**-ben
-  tárolva. Ekkor a `deploy.yml`-t erre kell átírni.
+**Alternatívák:** Netlify/Vercel (kösd össze a repót, push után magától deploy-ol),
+vagy GitHub Pages (saját domainnel) – kérésre ezekre is átírható a workflow.
 
 ## Helyi futtatás
 

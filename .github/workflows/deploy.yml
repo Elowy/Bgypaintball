@@ -1,41 +1,35 @@
-name: Deploy to GitHub Pages
+name: Deploy via FTP (cPanel)
 
-# Minden alkalommal lefut, amikor a fő ágra push történik (pl. egy PR merge-ölésekor).
-# Így GitHub merge után a weboldal automatikusan frissül.
+# Minden alkalommal lefut, amikor a fő ágra push történik (pl. PR merge),
+# és FTP-n feltölti a statikus oldalt a tárhelyre. Így merge után automatikusan frissül.
 on:
   push:
     branches: [main, master]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Egyszerre csak egy deploy fusson; a folyamatban lévőt megszakítjuk.
-concurrency:
-  group: pages
-  cancel-in-progress: true
-
 jobs:
-  deploy:
+  ftp-deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      # A statikus oldal a repó gyökerében van; a teljes tartalmat feltöltjük.
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: FTP feltöltés
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          path: '.'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          # --- Ezeket GitHub Secrets-ben kell megadni (lásd README) ---
+          server: ${{ secrets.FTP_SERVER }}       # pl. ftp.bgyarmatpaintball.hu vagy a szerver IP
+          username: ${{ secrets.FTP_USERNAME }}   # az FTP-fiók felhasználóneve
+          password: ${{ secrets.FTP_PASSWORD }}   # az FTP-fiók jelszava
+          # ------------------------------------------------------------
+          protocol: ftps            # titkosított FTP (ajánlott). Ha nem megy: 'ftp'
+          port: 21                  # cPanel FTPS általában 21; ha más, írd át
+          local-dir: ./             # a repó gyökere
+          server-dir: /public_html/ # a tárhely webgyökere (cPanel: általában public_html)
+          # Ne töltse fel a fejlesztői/segédfájlokat:
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            scripts/**
+            **/*.md

@@ -86,6 +86,34 @@ A localStorage csak a saját böngésződben őrzi a módosítást. Élesítésh
   az admin szerkesztőben a **🔒 Adatvédelem** gombbal állíthatók, és a megszokott
   módon (Export → `content.json`) tehetők élesbe.
 
+## Automatikus frissítés GitHub merge után (deploy)
+
+A repóban van egy kész GitHub Actions workflow (`.github/workflows/deploy.yml`),
+amely **minden `main`/`master` ágra történő push (pl. PR merge) után automatikusan
+kiteszi a weboldalt GitHub Pages-re**. Teendők egyszer:
+
+1. **GitHub → Settings → Pages → Build and deployment → Source:** válaszd a
+   **„GitHub Actions"** lehetőséget.
+2. Ellenőrizd: **Settings → Actions → General → Workflow permissions** engedélyezze
+   az Actions futását (alapból jó).
+3. Ezután merge-ölj egy PR-t a `main` ágra → a workflow lefut, és pár perc múlva
+   frissül az oldal. Az állapot a **GitHub → Actions** fülön látszik.
+4. Az admin szerkesztőből exportált **`content.json`-t** és a feltöltött képeket
+   is elég a `main` ágra commitolni – a deploy ezeket is kiteszi, így a
+   szövegek/árak/promóció élesben frissülnek.
+
+**Saját domain (bgyarmatpaintball.hu) GitHub Pages-en:** Settings → Pages →
+Custom domain mezőbe írd be a domaint, hozz létre egy `CNAME` fájlt a repó
+gyökerében a domainnel, és a domain szolgáltatónál állítsd be a DNS-t
+(a GitHub Pages A-rekordjaira / `<felhasználó>.github.io` CNAME-re).
+
+**Alternatívák (ha nem GitHub Pages-t használsz):**
+- **Netlify / Vercel:** kösd össze a GitHub repót; minden push/merge után
+  automatikusan deploy-ol, workflow nélkül. (Custom domain a szolgáltatónál.)
+- **Meglévő tárhely (cPanel / FTP):** használj FTP-deploy Actiont (pl.
+  `SamKirkland/FTP-Deploy-Action`), a tárhely adatait **GitHub Secrets**-ben
+  tárolva. Ekkor a `deploy.yml`-t erre kell átírni.
+
 ## Helyi futtatás
 
 Nincs build lépés. Elég megnyitni az `index.html`-t böngészőben, vagy egy

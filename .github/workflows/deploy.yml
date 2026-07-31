@@ -40,8 +40,7 @@ jobs:
           set ftp:ssl-protect-data true
           set ftp:ssl-protect-list true
           set ftp:passive-mode true
-          set ftp:ignore-pasv-address true
-          set ftp:prefer-epsv false
+          set ftp:prefer-epsv true
           set net:connection-limit 1
           set net:timeout 25
           set net:max-retries 3

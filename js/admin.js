@@ -239,10 +239,10 @@
   /* ---------- Csomagok (árazás) ---------- */
   var COLORS = [['none', 'Nincs'], ['orange', 'Narancs'], ['green', 'Zöld'], ['blue', 'Kék'], ['purple', 'Lila'], ['yellow', 'Sárga']];
   var DEFAULT_PACKAGES = [
-    { name: 'Alap csomag', sub: '100 db golyóval', amount: '6 000', unit: 'Ft / fő',
+    { name: 'Újonc csomag', sub: '100 db golyóval', amount: '6 000', unit: 'Ft / fő',
       features: ['4 órás pályahasználat', 'Tippmann 98 marker', 'Overál & védőmaszk', 'Lányoknak védőmellény', '100 db golyó'],
       extra: 'További golyó: 17 Ft / db', badge: '', color: 'none' },
-    { name: 'Alap csomag', sub: '200 db golyóval', amount: '8 000', unit: 'Ft / fő',
+    { name: 'Veterán csomag', sub: '200 db golyóval', amount: '8 000', unit: 'Ft / fő',
       features: ['4 órás pályahasználat', 'Tippmann 98 marker', 'Overál & védőmaszk', 'Lányoknak védőmellény', '200 db golyó'],
       extra: 'További golyó: 15 Ft / db', badge: 'Népszerű', color: 'orange' }
   ];

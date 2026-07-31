@@ -1,0 +1,3 @@
+# A szerver élő tartalom-adata (a content.php írja, NEM a repóból jön)
+content-data.json
+content-data.json.tmp

@@ -61,7 +61,25 @@ közvetlenül a böngészőből szerkeszthető — **backend nélkül**.
   (a „Népszerű" helyett bármi) és **kiemelési szín** (5 opció). Több csomag
   esetén az áraknál **nyilakkal, folyamatosan pörgethető** carousel jelenik meg.
 
-### Hogy lássa MINDENKI a változást?
+### Szerveroldali mentés (ajánlott, cPanel/PHP) – azonnal mindenki látja
+
+Ha feltöltöd a **`content.php`** fájlt az oldal gyökerébe (az `index.html`
+mellé), az admin **Mentés** gombja **közvetlenül a szerverre ír**, és a
+módosítások **azonnal, minden látogatónál** megjelennek – export és FTP-deploy
+**nélkül**. Ilyenkor a belépés jelszava is **szerveroldalon** ellenőrződik.
+
+Teendők egyszer:
+1. Töltsd fel a **`content.php`**-t (Total Commanderrel is jó) az oldal gyökerébe.
+2. A `content.php` tetején cseréld le a `$PASS_HASH`-t a saját jelszavad
+   SHA-256 hash-ére (a fájlban leírtam a generálást). Ugyanezt a jelszót
+   állítsd be a `js/admin.js` `PASS_HASH`-ében is (a statikus tartalékhoz).
+3. A `content-data.json` a szerveren automatikusan létrejön (a PHP írja);
+   ezt **ne** töltsd fel a repóból (a deploy és a `.gitignore` ki is zárja).
+
+> Ha nincs feltöltve `content.php`, az oldal a régi módon működik: a mentés a
+> böngészőbe kerül, és a lenti `content.json`-os úton lehet élesíteni.
+
+### Hogy lássa MINDENKI a változást? (content.php nélkül, statikus mód)
 
 A localStorage csak a saját böngésződben őrzi a módosítást. Élesítéshez:
 

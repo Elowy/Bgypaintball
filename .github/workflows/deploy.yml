@@ -51,6 +51,7 @@ jobs:
             --exclude .github/ \
             --exclude scripts/ \
             --exclude-glob *.md \
+            --exclude-glob content-data.json* \
             ./ ./
           bye
           SCRIPT

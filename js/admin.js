@@ -18,8 +18,13 @@
   'use strict';
 
   var STORAGE_KEY = 'bgyp_content_v1';
-  // sha256("bgyarmat-admin")
+  // sha256("bgyarmat-admin")  – csak a szerver nélküli (statikus) tartalék belépéshez
   var PASS_HASH = '4e6ed4660963acb50553558c3061e2ce3ddfc4ea81f6fb9c43596db26b0bc380';
+
+  // Szerveroldali backend (PHP). Ha elérhető, innen tölt és ide ment -> mindenki azonnal látja.
+  var API = 'content.php';
+  var apiAvailable = false;   // az init() állítja be, ha a content.php válaszol
+  var adminPassword = null;   // belépés után memóriában, a szerverre mentéshez
 
   function fields() { return Array.prototype.slice.call(document.querySelectorAll('[data-edit]')); }
 
@@ -62,6 +67,32 @@
   function buildMap() {
     var m = Object.assign({}, baseContent, getStored(), collectAll());
     m.packages = packages; m.promo = promo; return m;
+  }
+
+  // Mentés a szerverre (ha van backend és be vagyunk lépve). Promise<bool>.
+  function saveToServer() {
+    if (!apiAvailable || !adminPassword) return Promise.resolve(null);
+    return fetch(API + '?action=save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: adminPassword, content: buildMap() })
+    }).then(function (r) { return r.json(); })
+      .then(function (j) { return !!(j && j.ok); })
+      .catch(function () { return false; });
+  }
+
+  // Egységes mentés: helyi (localStorage) + ha van, a szerverre is.
+  function commit(okMsg) {
+    fields().forEach(syncLink);
+    setStored(buildMap());
+    if (apiAvailable && adminPassword) {
+      saveToServer().then(function (ok) {
+        toast(ok ? (okMsg || 'Mentve a szerverre – mindenki látja! ✅')
+                 : 'Szerverre mentés sikertelen (jelszó vagy írási jog?).');
+      });
+    } else {
+      toast('Mentve ebben a böngészőben. Éles megjelenéshez: tölts fel content.php-t, vagy exportálj.');
+    }
   }
 
   /* ---------- Promóciós popup ---------- */
@@ -155,10 +186,9 @@
         btnLink: wrap.querySelector('#prLink').value.trim(),
         color: chosen
       };
-      var m = getStored(); m.promo = promo; setStored(m);
       refreshPromo();
       close();
-      toast('Promóció mentve. Az élesítéshez exportálj!');
+      commit('Promóció mentve a szerverre – mindenki látja! ✅');
     };
   }
 
@@ -202,7 +232,7 @@
       setStored(m);
       applyContent(m);
       close();
-      toast('Adatvédelmi adatok mentve. Az adatvédelem oldalon jelennek meg; élesítéshez exportálj!');
+      commit('Adatvédelmi adatok mentve a szerverre! ✅');
     };
   }
 
@@ -358,8 +388,8 @@
     wrap.querySelector('#pkgCancel').onclick = close;
     wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
     wrap.querySelector('#pkgSave').onclick = function () {
-      packages = work; persistPackages(); renderPackages(); close();
-      toast('Csomagok mentve ebben a böngészőben. Az élesítéshez exportálj!');
+      packages = work; renderPackages(); close();
+      commit('Csomagok mentve a szerverre – mindenki látja! ✅');
     };
   }
 
@@ -370,13 +400,25 @@
     }).join('');
   }
 
-  /* ---------- Tartalom betöltése (content.json + localStorage) ---------- */
+  /* ---------- Tartalom betöltése (szerver -> content.json -> localStorage) ---------- */
   async function init() {
     var base = null;
+    // 1) Szerveroldali backend (ha feltöltötted a content.php-t) – ez a mérvadó
     try {
-      var r = await fetch('content.json', { cache: 'no-store' });
-      if (r.ok) base = await r.json();
-    } catch (e) { /* nincs content.json – alapértelmezett szövegek maradnak */ }
+      var ra = await fetch(API + '?action=load', { cache: 'no-store' });
+      if (ra.ok) {
+        var txt = await ra.text();
+        var parsed = JSON.parse(txt || '{}');
+        if (parsed && typeof parsed === 'object') { base = parsed; apiAvailable = true; }
+      }
+    } catch (e) { /* nincs backend – megyünk a statikus fájlra */ }
+    // 2) Statikus content.json (ha nincs backend)
+    if (!apiAvailable) {
+      try {
+        var r = await fetch('content.json', { cache: 'no-store' });
+        if (r.ok) base = await r.json();
+      } catch (e) { /* nincs content.json – alapértelmezett szövegek maradnak */ }
+    }
     if (base) { baseContent = base; applyContent(base); }
     applyContent(getStored());
 
@@ -423,8 +465,23 @@
     wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
     wrap.querySelector('form').addEventListener('submit', async function (e) {
       e.preventDefault();
-      var ok = (await sha256(pass.value)) === PASS_HASH;
-      if (ok) { wrap.remove(); enterEdit(); }
+      var pw = pass.value;
+      var ok;
+      if (apiAvailable) {
+        // Szerveroldali ellenőrzés (valódi védelem)
+        try {
+          var r = await fetch(API + '?action=auth', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: pw })
+          });
+          var j = await r.json();
+          ok = !!(j && j.ok);
+        } catch (err) { ok = false; }
+      } else {
+        // Statikus tartalék: kliensoldali hash
+        ok = (await sha256(pw)) === PASS_HASH;
+      }
+      if (ok) { adminPassword = pw; wrap.remove(); enterEdit(); }
       else { wrap.querySelector('#adminErr').hidden = false; pass.select(); }
     });
   }
@@ -469,9 +526,7 @@
   }
 
   function save() {
-    fields().forEach(syncLink);
-    setStored(buildMap());
-    toast('Mentve ebben a böngészőben. Az élesítéshez exportálj és töltsd fel a content.json-t.');
+    commit('Mentve a szerverre – mindenki látja! ✅');
   }
 
   function exportJSON() {

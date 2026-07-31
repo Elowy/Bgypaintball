@@ -251,6 +251,21 @@
   ];
   var packages = DEFAULT_PACKAGES.slice();
 
+  // Biztosítja, hogy a Rambo (arany) csomag mindig megjelenjen – akkor is, ha
+  // egy korábban elmentett, régi (2 csomagos) lista van tárolva a böngészőben
+  // vagy a szerveren (az felülírná az alapértelmezést, és eltűnne a Rambo).
+  function ensureRambo() {
+    var has = packages.some(function (p) {
+      return p && (p.color === 'gold' || /rambo/i.test(p.name || ''));
+    });
+    if (has) return;
+    var rambo = null;
+    for (var i = 0; i < DEFAULT_PACKAGES.length; i++) {
+      if (DEFAULT_PACKAGES[i].color === 'gold') { rambo = DEFAULT_PACKAGES[i]; break; }
+    }
+    if (rambo) packages = packages.concat([JSON.parse(JSON.stringify(rambo))]);
+  }
+
   function esc(s) { s = (s == null ? '' : String(s)); return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function attr(s) { return esc(s).replace(/"/g, '&quot;'); }
 
@@ -462,6 +477,7 @@
     // Csomagok: stored > content.json > alapértelmezett
     var merged = Object.assign({}, base || {}, getStored());
     if (Array.isArray(merged.packages) && merged.packages.length) packages = merged.packages;
+    ensureRambo();
     renderPackages();
 
     // Promóció: stored > content.json > alapértelmezett

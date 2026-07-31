@@ -1,7 +1,8 @@
 name: Deploy via FTP (cPanel)
 
-# Minden alkalommal lefut, amikor a fő ágra push történik (pl. PR merge),
-# és FTP-n feltölti a statikus oldalt a tárhelyre. Így merge után automatikusan frissül.
+# main/master push (PR merge) után FTP-n feltölti a statikus oldalt a tárhelyre.
+# lftp-t használunk (mint egy FTP-kliens), mert megbízhatóbban kezeli a
+# mappákat és az FTPS-t, mint a korábbi action.
 on:
   push:
     branches: [main, master]
@@ -14,23 +15,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: FTP feltöltés
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          # --- Ezeket GitHub Secrets-ben kell megadni (lásd README) ---
-          server: ${{ secrets.FTP_SERVER }}       # pl. ftp.bgyarmatpaintball.hu vagy a szerver IP
-          username: ${{ secrets.FTP_USERNAME }}   # az FTP-fiók felhasználóneve
-          password: ${{ secrets.FTP_PASSWORD }}   # az FTP-fiók jelszava
-          # ------------------------------------------------------------
-          protocol: ftps            # titkosított FTP (ajánlott). Ha nem megy: 'ftp'
-          port: 21                  # cPanel FTPS általában 21; ha más, írd át
-          local-dir: ./             # a repó gyökere
-          # A dedikált FTP-fiók közvetlenül a webgyökérbe landol.
-          server-dir: ./
-          # Ne töltse fel a fejlesztői/segédfájlokat:
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            scripts/**
-            **/*.md
+      - name: lftp telepítése
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Feltöltés (lftp mirror)
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          # Hitelesítés .netrc-ből (a jelszó nem kerül a folyamat-argumentumokba).
+          umask 077
+          cat > "$HOME/.netrc" <<EOF
+          machine $FTP_SERVER
+          login $FTP_USERNAME
+          password $FTP_PASSWORD
+          EOF
+
+          lftp "$FTP_SERVER" <<'SCRIPT'
+          set cmd:fail-exit true
+          set ssl:verify-certificate no
+          set ftp:ssl-allow true
+          set ftp:ssl-protect-data true
+          set ftp:passive-mode true
+          set net:timeout 20
+          set net:max-retries 2
+          # Feltöltés a fiók belépési könyvtárába (a dedikált fiók a webgyökérbe landol).
+          # Ha a fő fiókot használod és a home-ba landolsz, írd át a végét: ./ /public_html/
+          mirror -R --verbose --ignore-time --parallel=4 \
+            --exclude-glob .git* \
+            --exclude .github/ \
+            --exclude scripts/ \
+            --exclude-glob *.md \
+            ./ ./
+          bye
+          SCRIPT
+
+          rm -f "$HOME/.netrc"

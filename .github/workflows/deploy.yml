@@ -25,10 +25,10 @@ jobs:
           protocol: ftps            # titkosított FTP (ajánlott). Ha nem megy: 'ftp'
           port: 21                  # cPanel FTPS általában 21; ha más, írd át
           local-dir: ./             # a repó gyökere
-          # Ahová az FTP-fiók "landol". Dedikált cPanel FTP-fiók általában
-          # közvetlenül a webgyökérbe érkezik -> ./  (ha a fő fiókot használod
-          # és a home-ba landolsz, írd át /public_html/-re).
-          server-dir: ./
+          # A fő cPanel FTP-fiók a home-ba landol, a webgyökér: /public_html/.
+          # Ha dedikált (jailed) FTP-fiókot használsz, ami már a webgyökérbe
+          # érkezik, írd át ./-re.
+          server-dir: /public_html/
           # Ne töltse fel a fejlesztői/segédfájlokat:
           exclude: |
             **/.git*

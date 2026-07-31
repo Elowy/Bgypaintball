@@ -237,27 +237,64 @@
   }
 
   /* ---------- Csomagok (árazás) ---------- */
-  var COLORS = [['none', 'Nincs'], ['orange', 'Narancs'], ['green', 'Zöld'], ['blue', 'Kék'], ['purple', 'Lila'], ['yellow', 'Sárga']];
+  var COLORS = [['none', 'Nincs'], ['orange', 'Narancs'], ['green', 'Zöld'], ['blue', 'Kék'], ['purple', 'Lila'], ['yellow', 'Sárga'], ['gold', 'Arany']];
   var DEFAULT_PACKAGES = [
     { name: 'Újonc csomag', sub: '100 db golyóval', amount: '6 000', unit: 'Ft / fő',
       features: ['4 órás pályahasználat', 'Tippmann 98 marker', 'Overál & védőmaszk', 'Lányoknak védőmellény', '100 db golyó'],
       extra: 'További golyó: 17 Ft / db', badge: '', color: 'none' },
     { name: 'Veterán csomag', sub: '200 db golyóval', amount: '8 000', unit: 'Ft / fő',
       features: ['4 órás pályahasználat', 'Tippmann 98 marker', 'Overál & védőmaszk', 'Lányoknak védőmellény', '200 db golyó'],
-      extra: 'További golyó: 15 Ft / db', badge: 'Népszerű', color: 'orange' }
+      extra: 'További golyó: 15 Ft / db', badge: 'Népszerű', color: 'orange' },
+    { name: 'Rambo csomag', sub: '500 db golyóval', amount: '12 000', unit: 'Ft / fő',
+      features: ['4 órás pályahasználat', 'Tippmann 98 marker', 'Overál & védőmaszk', 'Lányoknak védőmellény', '500 db golyó'],
+      extra: 'További golyó: 13 Ft / db', badge: '', color: 'gold' }
   ];
   var packages = DEFAULT_PACKAGES.slice();
 
   function esc(s) { s = (s == null ? '' : String(s)); return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function attr(s) { return esc(s).replace(/"/g, '&quot;'); }
 
+  // "Rambo" pálcika-figura, ami az arany (gold) csomag kártyája mögül néha
+  // kibújik, össze-vissza lövöldöz és egy felhőcskén kiírja: ratatatatata!
+  var RAMBO_SCENE =
+    '<div class="rambo" aria-hidden="true">' +
+      '<div class="rambo-cloud"><span>ratatatatata!</span></div>' +
+      '<div class="rambo-fig">' +
+        '<svg viewBox="0 0 180 120" width="164" height="109">' +
+          '<circle class="rb-pb rb-pb1" cx="140" cy="30" r="4"/>' +
+          '<circle class="rb-pb rb-pb2" cx="140" cy="30" r="4"/>' +
+          '<circle class="rb-pb rb-pb3" cx="140" cy="30" r="4"/>' +
+          '<circle class="rb-pb rb-pb4" cx="140" cy="30" r="4"/>' +
+          '<path class="rb-flash" d="M140 30 l16 -6 l-11 6 l14 3 l-15 1 l7 9 l-10 -7 l-2 12 l-2 -13 z"/>' +
+          '<g class="rb-body">' +
+            '<line class="rb-limb" x1="74" y1="90" x2="64" y2="118"/>' +
+            '<line class="rb-limb" x1="74" y1="90" x2="86" y2="118"/>' +
+            '<line class="rb-torso" x1="74" y1="52" x2="74" y2="90"/>' +
+            '<line class="rb-belt" x1="60" y1="58" x2="90" y2="82"/>' +
+            '<line class="rb-limb" x1="74" y1="60" x2="96" y2="52"/>' +
+            '<circle class="rb-head" cx="74" cy="40" r="12"/>' +
+            '<path class="rb-bandana" d="M61 38 q13 -8 26 0"/>' +
+            '<line class="rb-bandtail" x1="61" y1="39" x2="49" y2="44"/>' +
+            '<line class="rb-bandtail" x1="61" y1="42" x2="50" y2="51"/>' +
+            '<g class="rb-gunarm">' +
+              '<line class="rb-limb" x1="74" y1="56" x2="98" y2="44"/>' +
+              '<line class="rb-marker" x1="90" y1="46" x2="140" y2="30"/>' +
+              '<line class="rb-hopper" x1="112" y1="40" x2="110" y2="29"/>' +
+            '</g>' +
+          '</g>' +
+        '</svg>' +
+      '</div>' +
+    '</div>';
+
   function pkgCardHTML(p) {
+    var isGold = p.color === 'gold';
     var cls = (p.color && p.color !== 'none') ? ' hl hl-' + p.color : '';
+    if (isGold) cls += ' has-rambo';
     var badge = p.badge ? '<span class="badge">' + esc(p.badge) + '</span>' : '';
     var unit = p.unit ? ' <span>' + esc(p.unit) + '</span>' : '';
     var feats = (p.features || []).map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('');
     var extra = p.extra ? '<p class="price-extra">' + esc(p.extra) + '</p>' : '';
-    return '<article class="price-card' + cls + '">' + badge +
+    return '<article class="price-card' + cls + '">' + (isGold ? RAMBO_SCENE : '') + badge +
       '<h3 class="price-name">' + esc(p.name) + '</h3>' +
       '<p class="price-sub">' + esc(p.sub) + '</p>' +
       '<p class="price-value">' + esc(p.amount) + unit + '</p>' +

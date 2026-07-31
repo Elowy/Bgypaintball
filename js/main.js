@@ -200,6 +200,65 @@
   });
 })();
 
+/* ===== Ajándékutalvány rendelő modal (mailto) ===== */
+(function () {
+  var openBtn = document.getElementById('voucherOrderBtn');
+  var modal = document.getElementById('voucherModal');
+  if (!openBtn || !modal) return;
+  var form = document.getElementById('voucherForm');
+  var closeBtn = document.getElementById('voucherClose');
+  var err = document.getElementById('vmErr');
+  var EMAIL = 'bgyarmatpaintball@gmail.com';
+
+  function open() {
+    modal.hidden = false;
+    document.body.classList.add('no-scroll');
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+    var n = document.getElementById('vmName');
+    if (n) setTimeout(function () { n.focus(); }, 60);
+  }
+  function close() {
+    modal.classList.remove('show');
+    document.body.classList.remove('no-scroll');
+    setTimeout(function () { modal.hidden = true; }, 300);
+  }
+
+  openBtn.addEventListener('click', open);
+  if (closeBtn) closeBtn.addEventListener('click', close);
+  modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.hidden) close();
+  });
+
+  if (form) form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+    var name = v('vmName'), phone = v('vmPhone');
+    if (!name || !phone) { if (err) err.hidden = false; return; }
+    if (err) err.hidden = true;
+
+    var payEl = form.querySelector('input[name="pay"]:checked');
+    var pay = payEl ? payEl.value : '';
+    var lines = [
+      'Ajándékutalvány megrendelés',
+      '----------------------------',
+      'Név: ' + name,
+      'Telefon: ' + phone,
+      'E-mail: ' + (v('vmEmail') || '-'),
+      'Utalvány értéke / csomag: ' + (v('vmValue') || '-'),
+      'Darabszám: ' + (v('vmQty') || '1'),
+      'Fizetési mód: ' + pay,
+      'Megjegyzés: ' + (v('vmMsg') || '-')
+    ];
+    var subject = 'Ajándékutalvány rendelés – ' + name;
+    var href = 'mailto:' + EMAIL +
+      '?subject=' + encodeURIComponent(subject) +
+      '&body=' + encodeURIComponent(lines.join('\n'));
+    window.location.href = href;
+    close();
+  });
+})();
+
 /* ===== Lightbox (gallery image zoom) ===== */
 (function () {
   const imgs = Array.prototype.slice.call(
@@ -268,7 +327,7 @@
 /* ===== Scroll reveal (lépcsőzetes) ===== */
 (function () {
   const targets = document.querySelectorAll(
-    '.section-head, .card, .price-card, .gm-card, .gallery-item, .partner, .media-card, .price-note, .fb-feed'
+    '.section-head, .card, .price-card, .gm-card, .gallery-item, .partner, .media-card, .price-note, .fb-feed, .voucher-visual, .voucher-info'
   );
   targets.forEach(function (el) { el.classList.add('reveal'); });
 

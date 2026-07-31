@@ -58,8 +58,21 @@ közvetlenül a böngészőből szerkeszthető — **backend nélkül**.
 - **Csomagok (árak):** a toolbar **🎫 Csomagok** gombjával külön szerkesztő
   nyílik, ahol csomagokat lehet **hozzáadni / törölni**, és mindegyikhez
   megadható **cím, alcím, összeg, jellemzők, extra sor, kiemelés-címke**
-  (a „Népszerű" helyett bármi) és **kiemelési szín** (5 opció). Több csomag
-  esetén az áraknál **nyilakkal, folyamatosan pörgethető** carousel jelenik meg.
+  (a „Népszerű" helyett bármi) és **kiemelési szín** (6 opció). Az **arany**
+  szín egy különleges „Rambo” pálcika-figurát is előhív, aki a kártya mögül
+  időnként kibújik és össze-vissza lövöldöz. Több csomag esetén az áraknál
+  **nyilakkal, folyamatosan pörgethető** carousel jelenik meg.
+
+## Ajándékutalvány
+
+A főoldalon külön szekció (`#ajandekutalvany`) hívja fel a figyelmet az
+ajándékutalvány-vásárlásra, a felső menüben pedig a **🎁 Ajándékutalvány**
+link vezet oda. A rendelő űrlap **utánvétes** vagy **helyszíni fizetéses**
+opcióval e-mailt nyit meg az előre kitöltött megrendeléssel.
+
+- **Saját utalványkép:** tedd fel a képet az
+  `assets/img/ajandekutalvany.jpg` néven a tárhelyre – ekkor automatikusan az
+  jelenik meg. Amíg nincs feltöltve, egy beépített, aranykeretes minta látszik.
 
 ### Szerveroldali mentés (ajánlott, cPanel/PHP) – azonnal mindenki látja
 

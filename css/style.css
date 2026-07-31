@@ -64,9 +64,9 @@ h1,h2,h3 { line-height: 1.1; margin: 0 0 .5em; }
   background: rgba(13,15,18,.78); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
 }
-.nav-wrap { display: flex; align-items: center; justify-content: space-between; height: 82px; }
+.nav-wrap { display: flex; align-items: center; justify-content: space-between; height: 94px; }
 .brand { display: flex; align-items: center; gap: .6rem; font-weight: 800; }
-.brand-logo { display: block; width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,.4)); }
+.brand-logo { display: block; width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,.4)); }
 .site-footer .brand-logo { width: 50px; height: 50px; }
 .brand-text { font-size: 1.15rem; letter-spacing: .02em; }
 .brand-text strong { color: var(--orange); }
@@ -735,7 +735,7 @@ body.no-scroll { overflow: hidden; }
 @media (max-width: 720px) {
   .nav-toggle { display: flex; }
   .main-nav {
-    position: fixed; inset: 82px 0 auto 0; flex-direction: column; align-items: stretch;
+    position: fixed; inset: 94px 0 auto 0; flex-direction: column; align-items: stretch;
     gap: 0; background: var(--bg-alt); border-bottom: 1px solid var(--line);
     padding: .6rem 1rem 1.2rem; transform: translateY(-130%); transition: transform .3s ease;
     box-shadow: var(--shadow);

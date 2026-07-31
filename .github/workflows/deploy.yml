@@ -36,13 +36,20 @@ jobs:
           set cmd:fail-exit true
           set ssl:verify-certificate no
           set ftp:ssl-allow true
+          set ftp:ssl-force true
           set ftp:ssl-protect-data true
+          set ftp:ssl-protect-list true
           set ftp:passive-mode true
-          set net:timeout 20
-          set net:max-retries 2
+          set ftp:ignore-pasv-address true
+          set ftp:prefer-epsv false
+          set net:connection-limit 1
+          set net:timeout 25
+          set net:max-retries 3
+          set net:reconnect-interval-base 5
+          debug 3
           # Feltöltés a fiók belépési könyvtárába (a dedikált fiók a webgyökérbe landol).
           # Ha a fő fiókot használod és a home-ba landolsz, írd át a végét: ./ /public_html/
-          mirror -R --verbose --ignore-time --parallel=4 \
+          mirror -R --verbose --ignore-time \
             --exclude-glob .git* \
             --exclude .github/ \
             --exclude scripts/ \

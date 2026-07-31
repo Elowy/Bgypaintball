@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Játékmódok – Bgyarmatpaintball</title>
+  <style>
+    :root { --ink:#15181c; --muted:#555; --accent:#e2440f; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { font-family: "Segoe UI", Arial, sans-serif; color: var(--ink); background: #f2f2f2; line-height: 1.5; font-size: 12px; }
+    .page { width: 210mm; min-height: 297mm; margin: 12px auto; padding: 15mm 16mm 13mm; background: #fff; box-shadow: 0 6px 24px rgba(0,0,0,.18); }
+    header { display: flex; align-items: center; gap: 14px; border-bottom: 2px solid var(--accent); padding-bottom: 12px; }
+    header img { width: 62px; height: 62px; object-fit: contain; }
+    header .h-title { flex: 1; }
+    header h1 { font-size: 19px; margin: 0 0 2px; letter-spacing: .5px; }
+    header .sub { font-size: 11px; color: var(--muted); }
+    header .biz { text-align: right; font-size: 10.5px; color: var(--muted); line-height: 1.45; }
+    .lead { font-size: 11.5px; color: #333; margin: 10px 0 4px; }
+    .mode { border: 1px solid #e6e6e6; border-left: 5px solid var(--c, var(--accent)); border-radius: 8px; padding: 11px 14px; margin: 11px 0; background: #fcfcfc; }
+    .mode .top { display: flex; align-items: baseline; gap: 10px; }
+    .mode .num { font-size: 22px; font-weight: 800; color: var(--c, var(--accent)); line-height: 1; min-width: 30px; }
+    .mode h2 { font-size: 15px; margin: 0; color: var(--ink); }
+    .mode p { margin: 7px 0 0; font-size: 11.3px; color: #333; }
+    .mode .q { font-weight: 700; color: var(--ink); }
+    footer { margin-top: 14px; border-top: 1px solid #ddd; padding-top: 6px; font-size: 9.5px; color: #777; text-align: center; }
+    @media print {
+      body { background: #fff; }
+      .page { margin: 0; box-shadow: none; width: auto; min-height: auto; padding: 10mm 14mm 8mm; }
+      .noprint { display: none !important; }
+    }
+    .toolbar { width: 210mm; margin: 12px auto 0; text-align: right; }
+    .toolbar button { font: inherit; font-size: 12px; padding: 8px 16px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="toolbar noprint"><button onclick="window.print()">🖨️ Nyomtatás / PDF mentés</button></div>
+
+  <div class="page">
+    <header>
+      <img src="../assets/img/logo.png" alt="Bgyarmatpaintball logó" />
+      <div class="h-title">
+        <h1>JÁTÉKMÓDOK</h1>
+        <div class="sub">Válaszd ki a kedvenc módod – stratégia, csapatmunka vagy totális káosz!</div>
+      </div>
+      <div class="biz">
+        <strong>Bgyarmatpaintball</strong><br />
+        2660 Balassagyarmat, Fenyves út<br />
+        Tel.: 06 30 / 720 84 99<br />
+        bgyarmatpaintball@gmail.com
+      </div>
+    </header>
+
+    <p class="lead">A pálya adott, a többi rajtatok múlik. Az alábbi módok bármelyikét játszhatjátok – a személyzet minden előtt ismerteti a szabályokat.</p>
+
+    <div class="mode" style="--c:#e2440f;">
+      <div class="top"><span class="num">01</span><h2>Zászlórablás</h2></div>
+      <p>A két csapat a pálya átellenes pontjáról, a saját bázisáról indul, ahol a zászló található. A cél bejutni az ellenséges bázisra és megszerezni vagy megsemmisíteni a zászlót – haladó szinten hazajuttatni a sajátunkra. A legnépszerűbb mód: fokozott csapatmunka és okos feladatmegosztás kell a győzelemhez. <span class="q">Nektek menni fog?</span></p>
+    </div>
+
+    <div class="mode" style="--c:#c9a227;">
+      <div class="top"><span class="num">02</span><h2>Tesók harca!</h2></div>
+      <p>Két harcos, egymást fedezve, szemben az egész világgal. A játékot 2 fős csapatok játsszák, az egyetlen cél túlélni és mindenki mást semlegesíteni. Teljes az egymásra utaltság – egyedül nincs sok esély. <span class="q">Mennyire bízhatsz meg a társadban?</span></p>
+    </div>
+
+    <div class="mode" style="--c:#1f9d4d;">
+      <div class="top"><span class="num">03</span><h2>Utolsó emberig</h2></div>
+      <p>A legegyszerűbb és legrövidebb játékforma: mindenki mindenki ellen. Nincsenek célok, csapatok, pontok, se szabályok – totális káosz, teljes őrület. Hősként legyőzöl mindenkit, vagy gyáván megvárod az utolsó talpon maradót? <span class="q">Becsület vagy hatékonyság?</span></p>
+    </div>
+
+    <div class="mode" style="--c:#1f8bd0;">
+      <div class="top"><span class="num">04</span><h2>Team Deathmatch</h2></div>
+      <p>Két csapat, egy cél: töröld el a másikat! A két alakulat egymással szemben, folyamatos tűzharcban küzd, és az a csapat nyer, amelyik elsőként semlegesíti az összes ellenfelet – vagy a végén több talpon maradó játékossal áll. Taktikus fedezékhasználat és összehangolt csapatjáték dönt. <span class="q">Melyik csapat marad állva?</span></p>
+    </div>
+
+    <footer>Bgyarmatpaintball • 2660 Balassagyarmat, Fenyves út • 06 30 / 720 84 99 • bgyarmatpaintball@gmail.com</footer>
+  </div>
+</body>
+</html>
